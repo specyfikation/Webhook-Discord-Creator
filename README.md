@@ -1,4 +1,4 @@
-![HookShot banner](banner.png)
+![banner](banner.png)
 
 # 🪝 HookShot
 
