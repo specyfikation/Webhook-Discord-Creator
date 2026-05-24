@@ -2,7 +2,7 @@
 
 # 🪝 HookShot
 
-Send Discord messages through any webhook — plain text, embeds, custom bot identity. No installs, no dependencies. Just open the HTML file and go.
+Send Discord messages through any webhook - plain text, embeds, custom bot identity. No installs, no dependencies. Just open the HTML file and go.
 
 [![Version](https://img.shields.io/badge/version-4.0-5865f2?style=flat-square)](https://github.com/specyfikation/HookShot) [![Discord Webhooks](https://img.shields.io/badge/Discord%20API-webhooks-5865f2?style=flat-square&logo=discord&logoColor=white)](https://discord.com/developers/docs/resources/webhook)
 
@@ -14,15 +14,15 @@ Send Discord messages through any webhook — plain text, embeds, custom bot ide
 
 - Send plain text messages to any Discord webhook in one click
 - Custom bot name and avatar URL per message
-- Full embed builder — title, description, title URL, sidebar color picker, footer, auto timestamp
+- Full embed builder - title, description, title URL, sidebar color picker, footer, auto timestamp
 - Character counter with warning at 1800 chars
 - `[OK]` / `[ERR]` status feedback with Discord's actual error message
-- Zero dependencies — single `.html` file, works offline
+- Zero dependencies - single `.html` file, works offline
 
 ## Requirements
 
 - A browser (Chrome, Firefox, Edge, anything modern)
-- A Discord webhook URL — that's it
+- A Discord webhook URL - that's it
 
 ## Usage
 
@@ -52,19 +52,19 @@ No server needed. Open the file directly in your browser (`File → Open` or dra
 |---|---|---|
 | Title | 256 chars | Clickable if you fill the Title URL |
 | Description | 4096 chars | Supports Discord markdown |
-| Title URL | — | Makes the title a hyperlink |
-| Sidebar color | — | Color picker + hex input, synced |
+| Title URL | - | Makes the title a hyperlink |
+| Sidebar color | - | Color picker + hex input, synced |
 | Footer | 2048 chars | Plain text |
 
 A timestamp is added automatically to every embed.
 
 ## Troubleshooting
 
-**Error 401 — Unauthorized**
+**Error 401 - Unauthorized**
 
 The webhook URL is wrong or was deleted. Go back to Discord and copy a fresh one.
 
-**Error 400 — Bad Request**
+**Error 400 - Bad Request**
 
 Usually means the embed is empty. Make sure it has at least a title or a description.
 
