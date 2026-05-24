@@ -4,7 +4,7 @@
 
 Send Discord messages through any webhook — plain text, embeds, custom bot identity. No installs, no dependencies. Just open the HTML file and go.
 
-[![Version](https://img.shields.io/badge/version-4.0-5865f2?style=flat-square)](https://github.com/specyfikation/HookShot) [![License](https://img.shields.io/badge/license-MIT-lightgray?style=flat-square)](LICENSE) [![Discord Webhooks](https://img.shields.io/badge/Discord%20API-webhooks-5865f2?style=flat-square&logo=discord&logoColor=white)](https://discord.com/developers/docs/resources/webhook)
+[![Version](https://img.shields.io/badge/version-4.0-5865f2?style=flat-square)](https://github.com/specyfikation/HookShot) [![License]([https://img.shields.io/badge/license-MIT-lightgray?style=flat-square](https://github.com/specyfikation/Webhook-Discord-Creator/blob/main/LICENSE))](LICENSE) [![Discord Webhooks](https://img.shields.io/badge/Discord%20API-webhooks-5865f2?style=flat-square&logo=discord&logoColor=white)](https://discord.com/developers/docs/resources/webhook)
 
 [⬇ Download](https://github.com/specyfikation/HookShot/blob/main/hookshot.html) · [View source](https://github.com/specyfikation/HookShot) · [Report a bug](https://github.com/specyfikation/HookShot/issues)
 
@@ -78,6 +78,6 @@ Open the browser console (`F12 → Console`) and check for errors. Most likely a
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT - see [LICENSE](https://github.com/specyfikation/Webhook-Discord-Creator/blob/main/LICENSE)
 
 Made by [specyfikation](https://github.com/specyfikation)
