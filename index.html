@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HookShot — Discord Webhook</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" />
+  <style>
+  :root {
+    --bg: #090909;
+    --surface: #111111;
+    --surface2: #181818;
+    --border: #3a3a3a;
+    --border2: #666;
+    --text: #c8c8c8;
+    --text-hi: #ffffff;
+    --muted: #888888;
+    --muted2: #555555;
+    --accent: #e8e8e8;
+    --accent2: #e04444;
+    --accent3: #88cc44;
+    --purple: #a78bfa;
+    --purple-dim: #7c3aed33;
+    --radius-lg: 12px;
+    --radius-md: 8px;
+    --radius-sm: 5px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    min-height: 100vh;
+    overflow-x: hidden;
+    text-shadow: 0 0 8px rgba(255,255,255,0.04);
+  }
+
+  /* Scanlines */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.28) 2px,
+      rgba(0,0,0,0.28) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.45;
+  }
+
+  /* Vignette */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.55) 100%);
+    pointer-events: none;
+    z-index: 9998;
+  }
+
+  /* ======= LAYOUT ======= */
+  .wrap {
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 40px 16px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ======= HERO ======= */
+  .hero {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--purple);
+    border-radius: var(--radius-lg);
+    padding: 24px 24px 20px;
+    margin-bottom: 32px;
+    overflow: hidden;
+    animation: fade-in 0.4s ease both;
+  }
+
+  /* watermark */
+  .hero::after {
+    content: 'HOOK';
+    position: absolute;
+    font-weight: 700;
+    font-size: 96px;
+    color: rgba(255,255,255,0.025);
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    letter-spacing: 0.1em;
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+    text-transform: lowercase;
+  }
+  .hero-eyebrow::before { content: '$ '; color: var(--border2); }
+
+  .hero-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+
+  .hero-icon {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    background: var(--surface2);
+    text-shadow: none;
+  }
+
+  .hero-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-hi);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    text-shadow: 0 0 24px rgba(255,255,255,0.4), 0 0 60px rgba(255,255,255,0.06);
+    text-transform: uppercase;
+  }
+
+  .hero-sub {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    margin-left: 58px;
+  }
+  .hero-sub::before { content: '# '; }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--purple-dim);
+    border: 1px solid rgba(167,139,250,0.25);
+    border-radius: 999px;
+    color: var(--purple);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 4px 12px;
+    margin-top: 14px;
+    margin-left: 58px;
+    text-shadow: none;
+  }
+
+  /* ======= SECTION LABEL ======= */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.14em;
+    text-transform: lowercase;
+    margin-bottom: 8px;
+  }
+  .section-label::before { content: '##'; color: var(--muted2); margin-right: 2px; }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .section-label i { font-size: 14px; color: var(--border2); text-shadow: none; }
+
+  /* ======= FIELD GROUP ======= */
+  .section { margin-bottom: 22px; animation: fade-in 0.4s ease both; }
+
+  .field-group {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: border-left-color 0.2s;
+  }
+  .field-group:focus-within { border-left-color: var(--accent); }
+
+  .field-row {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid var(--border);
+  }
+  .field-row:last-child { border-bottom: none; }
+
+  .field-icon {
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    flex-shrink: 0;
+    font-size: 15px;
+    background: var(--surface2);
+    border-right: 1px solid var(--border);
+    text-shadow: none;
+    transition: color 0.15s;
+  }
+  .field-row:focus-within .field-icon { color: var(--text); }
+
+  .field-inner { flex: 1; display: flex; flex-direction: column; padding: 0; }
+
+  .field-lbl {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    padding: 7px 12px 0;
+    font-weight: 700;
+    text-transform: lowercase;
+  }
+  .field-lbl::before { content: '// '; color: var(--muted2); }
+
+  .field-inner input,
+  .field-inner textarea {
+    border: none;
+    outline: none;
+    padding: 4px 12px 8px;
+    font-size: 13px;
+    color: var(--text-hi);
+    background: transparent;
+    width: 100%;
+    font-family: 'IBM Plex Mono', monospace;
+    resize: none;
+    caret-color: var(--accent);
+  }
+  .field-inner input::placeholder,
+  .field-inner textarea::placeholder { color: var(--muted); opacity: 0.7; font-style: normal; }
+  .field-inner textarea { min-height: 88px; resize: vertical; }
+
+  .char-row {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 12px 6px;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+  .char-row.warn { color: var(--accent2); font-weight: 700; }
+
+  /* ======= TWO COL ======= */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; }
+  .two-col .field-row { border-bottom: none; }
+  .two-col .field-row:first-child { border-right: 1px solid var(--border); }
+
+  /* ======= EMBED TOGGLE ======= */
+  .embed-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .75rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    margin-bottom: 4px;
+    transition: border-left-color 0.2s;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.03em;
+  }
+  .embed-toggle-row:hover { border-left-color: var(--border2); }
+  .embed-toggle-row.active { border-left-color: var(--purple); }
+
+  .embed-toggle-label { display: flex; align-items: center; gap: 8px; }
+  .embed-toggle-label i { font-size: 15px; color: var(--border2); text-shadow: none; }
+  .embed-toggle-label::before { content: '$ '; color: var(--muted); font-weight: 400; }
+
+  .toggle-switch {
+    width: 36px;
+    height: 18px;
+    background: var(--muted2);
+    border: 1px solid var(--border2);
+    border-radius: 999px;
+    position: relative;
+    transition: background .2s;
+    flex-shrink: 0;
+  }
+  .toggle-switch.on { background: var(--purple-dim); border-color: var(--purple); }
+  .toggle-knob {
+    width: 12px;
+    height: 12px;
+    background: var(--muted);
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: left .2s, background .2s;
+  }
+  .toggle-switch.on .toggle-knob { left: 20px; background: var(--purple); box-shadow: 0 0 6px rgba(167,139,250,0.5); }
+
+  /* ======= EMBED BODY ======= */
+  .embed-body {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-left: 3px solid var(--purple);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    overflow: hidden;
+    display: none;
+  }
+  .embed-body.visible { display: block; animation: fade-in 0.2s ease both; }
+
+  .embed-accent { height: 2px; background: var(--purple); box-shadow: 0 0 8px rgba(167,139,250,0.5); }
+
+  .color-row-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 12px 8px;
+  }
+  .color-row-inner input[type=color] {
+    width: 30px;
+    height: 24px;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    padding: 2px;
+    cursor: pointer;
+    background: var(--surface2);
+  }
+  .color-row-inner input[type=text] {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 13px;
+    color: var(--text-hi);
+    background: transparent;
+    font-family: 'IBM Plex Mono', monospace;
+    caret-color: var(--accent);
+  }
+
+  /* ======= BUTTON ======= */
+  .btn-send {
+    width: 100%;
+    background: var(--surface);
+    color: var(--text-hi);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    border-radius: var(--radius-md);
+    padding: 13px 0;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'IBM Plex Mono', monospace;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.15s;
+    margin-top: 20px;
+    letter-spacing: 0.06em;
+    text-transform: lowercase;
+    text-shadow: 0 0 12px rgba(255,255,255,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-send::before {
+    content: '$ ';
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .btn-send:hover {
+    background: var(--surface2);
+    border-color: var(--border2);
+    border-top-color: var(--text-hi);
+    box-shadow: 0 0 20px rgba(255,255,255,0.06);
+  }
+  .btn-send:active { transform: scale(.98); }
+  .btn-send:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* ======= STATUS ======= */
+  .status {
+    margin-top: .75rem;
+    padding: 10px 14px;
+    font-size: 12px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    border-left: 3px solid;
+    border-radius: var(--radius-md);
+    letter-spacing: 0.04em;
+  }
+  .status.success {
+    display: flex;
+    background: var(--surface);
+    color: var(--accent3);
+    border-color: var(--accent3);
+    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    text-shadow: 0 0 8px rgba(136,204,68,0.4);
+  }
+  .status.success::before { content: '[OK] '; font-weight: 700; }
+  .status.error {
+    display: flex;
+    background: var(--surface);
+    color: var(--accent2);
+    border-color: var(--accent2);
+    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .status.error::before { content: '[ERR] '; font-weight: 700; }
+
+  /* ======= ANIMATIONS ======= */
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section:nth-child(2) { animation-delay: 0.05s; }
+  .section:nth-child(3) { animation-delay: 0.10s; }
+  .section:nth-child(4) { animation-delay: 0.15s; }
+  .section:nth-child(5) { animation-delay: 0.20s; }
+
+  /* ======= FOOTER ======= */
+  .page-footer {
+    text-align: center;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .page-footer::before { content: '/* '; }
+  .page-footer::after  { content: ' */'; }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">./hookshot --init</div>
+    <div class="hero-row">
+      <div class="hero-icon">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- arc du hook -->
+          <path d="M7 6 C7 6 4 6 4 10 C4 14 7 14 7 14 L18 14" stroke="#a78bfa" stroke-width="2" stroke-linecap="square" fill="none"/>
+          <!-- flèche vers le bas -->
+          <line x1="18" y1="9" x2="18" y2="20" stroke="#e8e8e8" stroke-width="2" stroke-linecap="square"/>
+          <!-- pointe de flèche -->
+          <polyline points="14,16 18,20 22,16" stroke="#e8e8e8" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+          <!-- point d'impact -->
+          <rect x="16" y="21" width="4" height="1.5" fill="#a78bfa"/>
+        </svg>
+      </div>
+      <div class="hero-title">HookShot</div>
+    </div>
+    <div class="hero-sub">envoie des messages Discord via webhook</div>
+    <div class="hero-badge">
+      <i class="ti ti-brand-discord" aria-hidden="true"></i>
+      by Specyfikation
+    </div>
+  </div>
+
+  <!-- CONNEXION -->
+  <div class="section">
+    <div class="section-label"><i class="ti ti-link"></i> connexion</div>
+    <div class="field-group">
+      <div class="field-row">
+        <div class="field-icon"><i class="ti ti-webhook"></i></div>
+        <div class="field-inner">
+          <span class="field-lbl">URL du webhook</span>
+          <input type="url" id="wh-url" placeholder="https://discord.com/api/webhooks/..." />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IDENTITÉ BOT -->
+  <div class="section">
+    <div class="section-label"><i class="ti ti-user-circle"></i> identité du bot</div>
+    <div class="field-group">
+      <div class="two-col">
+        <div class="field-row">
+          <div class="field-icon"><i class="ti ti-pencil"></i></div>
+          <div class="field-inner">
+            <span class="field-lbl">Nom du bot</span>
+            <input type="text" id="bot-name" placeholder="HookShot" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-icon"><i class="ti ti-photo"></i></div>
+          <div class="field-inner">
+            <span class="field-lbl">Avatar URL</span>
+            <input type="url" id="avatar-url" placeholder="https://..." />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MESSAGE -->
+  <div class="section">
+    <div class="section-label"><i class="ti ti-message-2"></i> message</div>
+    <div class="field-group">
+      <div class="field-row" style="align-items:flex-start">
+        <div class="field-icon" style="padding-top:14px"><i class="ti ti-align-left"></i></div>
+        <div class="field-inner">
+          <span class="field-lbl">Contenu</span>
+          <textarea id="msg-content" placeholder="Tape ton message... **gras**, *italique*, @everyone..." maxlength="2000" oninput="updateCounter()"></textarea>
+          <div class="char-row" id="char-counter">0 / 2000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMBED -->
+  <div class="section">
+    <div class="section-label"><i class="ti ti-layout-bottombar"></i> embed</div>
+    <div class="embed-toggle-row" id="embed-toggle" onclick="toggleEmbed()">
+      <div class="embed-toggle-label">
+        <i class="ti ti-sparkles"></i> ajouter un embed
+      </div>
+      <div class="toggle-switch" id="toggle-sw"><div class="toggle-knob"></div></div>
+    </div>
+    <div class="embed-body" id="embed-body">
+      <div class="embed-accent" id="embed-accent"></div>
+      <div class="field-row" style="border-bottom:1px solid var(--border)">
+        <div class="field-icon"><i class="ti ti-heading"></i></div>
+        <div class="field-inner">
+          <span class="field-lbl">Titre</span>
+          <input type="text" id="em-title" placeholder="Titre de l'embed" maxlength="256" />
+        </div>
+      </div>
+      <div class="field-row" style="align-items:flex-start;border-bottom:1px solid var(--border)">
+        <div class="field-icon" style="padding-top:14px"><i class="ti ti-align-left"></i></div>
+        <div class="field-inner">
+          <span class="field-lbl">Description</span>
+          <textarea id="em-desc" style="min-height:64px" placeholder="Contenu de l'embed..." maxlength="4096"></textarea>
+        </div>
+      </div>
+      <div class="field-row" style="border-bottom:1px solid var(--border)">
+        <div class="field-icon"><i class="ti ti-link"></i></div>
+        <div class="field-inner">
+          <span class="field-lbl">URL du titre</span>
+          <input type="url" id="em-url" placeholder="https://..." />
+        </div>
+      </div>
+      <div class="field-row" style="border-bottom:1px solid var(--border)">
+        <div class="field-icon"><i class="ti ti-palette"></i></div>
+        <div class="field-inner">
+          <span class="field-lbl">Couleur de la barre</span>
+          <div class="color-row-inner">
+            <input type="color" id="em-color" value="#a78bfa" oninput="syncColor(this.value)" />
+            <input type="text" id="em-color-hex" value="#a78bfa" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)) syncColor(this.value)" />
+          </div>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-icon"><i class="ti ti-text-size"></i></div>
+        <div class="field-inner">
+          <span class="field-lbl">Footer</span>
+          <input type="text" id="em-footer" placeholder="Envoyé via HookShot" maxlength="2048" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-send" id="send-btn" onclick="sendWebhook()">
+    <i class="ti ti-send"></i> envoyer le message
+  </button>
+
+  <div class="status" id="status-box"></div>
+
+  <div class="page-footer">HookShot v4 — by Specyfikation — webhook Discord client</div>
+</div>
+
+<script>
+var embedOn = false;
+
+function toggleEmbed() {
+  embedOn = !embedOn;
+  var sw  = document.getElementById('toggle-sw');
+  var body = document.getElementById('embed-body');
+  var row  = document.getElementById('embed-toggle');
+  sw.className   = 'toggle-switch' + (embedOn ? ' on' : '');
+  body.className = 'embed-body'    + (embedOn ? ' visible' : '');
+  row.className  = 'embed-toggle-row' + (embedOn ? ' active' : '');
+}
+
+function syncColor(v) {
+  document.getElementById('em-color').value     = v;
+  document.getElementById('em-color-hex').value  = v;
+  document.getElementById('embed-accent').style.background = v;
+  document.getElementById('embed-accent').style.boxShadow  = '0 0 8px ' + v + '88';
+}
+
+function updateCounter() {
+  var len = document.getElementById('msg-content').value.length;
+  var el  = document.getElementById('char-counter');
+  el.textContent = len + ' / 2000';
+  el.className   = 'char-row' + (len > 1800 ? ' warn' : '');
+}
+
+function hexToInt(h) { return parseInt(h.replace('#', ''), 16); }
+
+async function sendWebhook() {
+  var url     = document.getElementById('wh-url').value.trim();
+  var content = document.getElementById('msg-content').value.trim();
+  var botName = document.getElementById('bot-name').value.trim();
+  var avatarUrl = document.getElementById('avatar-url').value.trim();
+  var btn = document.getElementById('send-btn');
+
+  if (!url)              { showStatus('error', 'saisis l\'URL du webhook.'); return; }
+  if (!content && !embedOn) { showStatus('error', 'écris un message ou active un embed.'); return; }
+  if (content.length > 2000) { showStatus('error', 'le message dépasse 2000 caractères.'); return; }
+
+  var payload = {};
+  if (content) payload.content = content;
+  if (botName && botName.length >= 2) payload.username = botName;
+  if (avatarUrl && avatarUrl.startsWith('http')) payload.avatar_url = avatarUrl;
+
+  if (embedOn) {
+    var embed = {};
+    var title  = document.getElementById('em-title').value.trim();
+    var desc   = document.getElementById('em-desc').value.trim();
+    var emUrl  = document.getElementById('em-url').value.trim();
+    var color  = document.getElementById('em-color').value;
+    var footer = document.getElementById('em-footer').value.trim();
+    if (!title && !desc) { showStatus('error', 'l\'embed doit avoir un titre ou une description.'); return; }
+    if (title)  embed.title       = title;
+    if (desc)   embed.description = desc;
+    if (emUrl && emUrl.startsWith('http')) embed.url = emUrl;
+    embed.color = hexToInt(color);
+    if (footer) embed.footer = { text: footer };
+    embed.timestamp = new Date().toISOString();
+    payload.embeds = [embed];
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin .8s linear infinite"></i> envoi en cours...';
+
+  try {
+    var res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok || res.status === 204) {
+      showStatus('success', 'message envoyé dans Discord !');
+      document.getElementById('msg-content').value = '';
+      updateCounter();
+    } else {
+      var detail = '';
+      try { var err = await res.json(); detail = err.message || JSON.stringify(err); } catch(e) { detail = 'erreur inconnue'; }
+      showStatus('error', 'erreur ' + res.status + ' : ' + detail);
+    }
+  } catch(e) {
+    showStatus('error', 'requête bloquée — vérifie l\'URL du webhook.');
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="ti ti-send"></i> envoyer le message';
+}
+
+function showStatus(type, msg) {
+  var s = document.getElementById('status-box');
+  s.className = 'status ' + type;
+  s.textContent = msg;
+}
+
+/* spin keyframe */
+var styleEl = document.createElement('style');
+styleEl.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+document.head.appendChild(styleEl);
+</script>
+</body>
+</html>
