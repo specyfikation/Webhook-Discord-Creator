@@ -25,22 +25,27 @@
     --accent3: #88cc44;
     --purple: #a78bfa;
     --purple-dim: #7c3aed33;
+    --discord-bg: #313338;
+    --discord-surface: #2b2d31;
+    --discord-msg: #383a40;
     --radius-lg: 12px;
     --radius-md: 8px;
     --radius-sm: 5px;
+    --topbar-h: 58px;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; height: 100%; }
 
   body {
     background: var(--bg);
     color: var(--text);
     font-family: 'IBM Plex Mono', monospace;
     font-size: 14px;
-    min-height: 100vh;
-    overflow-x: hidden;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
     text-shadow: 0 0 8px rgba(255,255,255,0.04);
   }
 
@@ -50,15 +55,12 @@
     position: fixed;
     inset: 0;
     background: repeating-linear-gradient(
-      to bottom,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.28) 2px,
-      rgba(0,0,0,0.28) 4px
+      to bottom, transparent, transparent 2px,
+      rgba(0,0,0,0.22) 2px, rgba(0,0,0,0.22) 4px
     );
     pointer-events: none;
     z-index: 9999;
-    opacity: 0.45;
+    opacity: 0.35;
   }
 
   /* Vignette */
@@ -66,96 +68,62 @@
     content: '';
     position: fixed;
     inset: 0;
-    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.55) 100%);
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.5) 100%);
     pointer-events: none;
     z-index: 9998;
   }
 
-  /* ======= LAYOUT ======= */
-  .wrap {
-    max-width: 540px;
-    margin: 0 auto;
-    padding: 40px 16px 80px;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* ======= HERO ======= */
-  .hero {
-    position: relative;
+  /* ======= TOPBAR ======= */
+  .topbar {
+    height: var(--topbar-h);
+    min-height: var(--topbar-h);
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--purple);
-    border-radius: var(--radius-lg);
-    padding: 24px 24px 20px;
-    margin-bottom: 32px;
-    overflow: hidden;
-    animation: fade-in 0.4s ease both;
-  }
-
-  /* watermark */
-  .hero::after {
-    content: 'HOOK';
-    position: absolute;
-    font-weight: 700;
-    font-size: 96px;
-    color: rgba(255,255,255,0.025);
-    right: -8px;
-    top: 50%;
-    transform: translateY(-50%);
-    letter-spacing: 0.1em;
-    pointer-events: none;
-  }
-
-  .hero-eyebrow {
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    margin-bottom: 10px;
-    text-transform: lowercase;
-  }
-  .hero-eyebrow::before { content: '$ '; color: var(--border2); }
-
-  .hero-row {
+    border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
-    gap: 14px;
-    margin-bottom: 8px;
+    padding: 0 28px;
+    gap: 20px;
+    z-index: 10;
+    position: relative;
+    flex-shrink: 0;
   }
 
-  .hero-icon {
-    width: 44px;
-    height: 44px;
+  .topbar-logo {
+    width: 32px;
+    height: 32px;
+    background: var(--surface2);
     border: 1px solid var(--border2);
     border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
     flex-shrink: 0;
-    background: var(--surface2);
-    text-shadow: none;
   }
 
-  .hero-title {
-    font-size: 26px;
+  .topbar-title {
+    font-size: 16px;
     font-weight: 700;
     color: var(--text-hi);
-    letter-spacing: -0.02em;
-    line-height: 1;
-    text-shadow: 0 0 24px rgba(255,255,255,0.4), 0 0 60px rgba(255,255,255,0.06);
+    letter-spacing: -0.01em;
     text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(255,255,255,0.35);
   }
 
-  .hero-sub {
+  .topbar-sep {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+  }
+
+  .topbar-sub {
     font-size: 11px;
     color: var(--muted);
     letter-spacing: 0.06em;
-    margin-left: 58px;
   }
-  .hero-sub::before { content: '# '; }
+  .topbar-sub::before { content: '# '; color: var(--border2); }
 
-  .hero-badge {
+  .topbar-badge {
+    margin-left: auto;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -167,10 +135,54 @@
     font-weight: 700;
     letter-spacing: 0.06em;
     padding: 4px 12px;
-    margin-top: 14px;
-    margin-left: 58px;
     text-shadow: none;
   }
+
+  .topbar-eyebrow {
+    font-size: 10px;
+    color: var(--muted2);
+    letter-spacing: 0.08em;
+    margin-left: 4px;
+  }
+  .topbar-eyebrow::before { content: '$ '; color: var(--border2); }
+
+  /* ======= MAIN LAYOUT ======= */
+  .main {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    grid-template-rows: 1fr;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ======= LEFT PANEL ======= */
+  .panel-left {
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 28px 24px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+  }
+  .panel-left::-webkit-scrollbar { width: 4px; }
+  .panel-left::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  /* ======= RIGHT PANEL ======= */
+  .panel-right {
+    overflow-y: auto;
+    padding: 28px 32px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+  }
+  .panel-right::-webkit-scrollbar { width: 4px; }
+  .panel-right::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
   /* ======= SECTION LABEL ======= */
   .section-label {
@@ -185,12 +197,7 @@
     margin-bottom: 8px;
   }
   .section-label::before { content: '##'; color: var(--muted2); margin-right: 2px; }
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
   .section-label i { font-size: 14px; color: var(--border2); text-shadow: none; }
 
   /* ======= FIELD GROUP ======= */
@@ -228,7 +235,7 @@
   }
   .field-row:focus-within .field-icon { color: var(--text); }
 
-  .field-inner { flex: 1; display: flex; flex-direction: column; padding: 0; }
+  .field-inner { flex: 1; display: flex; flex-direction: column; }
 
   .field-lbl {
     font-size: 9px;
@@ -254,8 +261,8 @@
     caret-color: var(--accent);
   }
   .field-inner input::placeholder,
-  .field-inner textarea::placeholder { color: var(--muted); opacity: 0.7; font-style: normal; }
-  .field-inner textarea { min-height: 88px; resize: vertical; }
+  .field-inner textarea::placeholder { color: var(--muted); opacity: 0.7; }
+  .field-inner textarea { min-height: 110px; resize: vertical; }
 
   .char-row {
     display: flex;
@@ -298,8 +305,7 @@
   .embed-toggle-label::before { content: '$ '; color: var(--muted); font-weight: 400; }
 
   .toggle-switch {
-    width: 36px;
-    height: 18px;
+    width: 36px; height: 18px;
     background: var(--muted2);
     border: 1px solid var(--border2);
     border-radius: 999px;
@@ -309,13 +315,11 @@
   }
   .toggle-switch.on { background: var(--purple-dim); border-color: var(--purple); }
   .toggle-knob {
-    width: 12px;
-    height: 12px;
+    width: 12px; height: 12px;
     background: var(--muted);
     border-radius: 50%;
     position: absolute;
-    top: 2px;
-    left: 2px;
+    top: 2px; left: 2px;
     transition: left .2s, background .2s;
   }
   .toggle-switch.on .toggle-knob { left: 20px; background: var(--purple); box-shadow: 0 0 6px rgba(167,139,250,0.5); }
@@ -331,30 +335,22 @@
     display: none;
   }
   .embed-body.visible { display: block; animation: fade-in 0.2s ease both; }
-
   .embed-accent { height: 2px; background: var(--purple); box-shadow: 0 0 8px rgba(167,139,250,0.5); }
 
   .color-row-inner {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 4px 12px 8px;
+    display: flex; align-items: center;
+    gap: 10px; padding: 4px 12px 8px;
   }
   .color-row-inner input[type=color] {
-    width: 30px;
-    height: 24px;
+    width: 30px; height: 24px;
     border: 1px solid var(--border2);
     border-radius: var(--radius-sm);
-    padding: 2px;
-    cursor: pointer;
+    padding: 2px; cursor: pointer;
     background: var(--surface2);
   }
   .color-row-inner input[type=text] {
-    flex: 1;
-    border: none;
-    outline: none;
-    font-size: 13px;
-    color: var(--text-hi);
+    flex: 1; border: none; outline: none;
+    font-size: 13px; color: var(--text-hi);
     background: transparent;
     font-family: 'IBM Plex Mono', monospace;
     caret-color: var(--accent);
@@ -369,27 +365,18 @@
     border-top: 2px solid var(--accent);
     border-radius: var(--radius-md);
     padding: 13px 0;
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 13px; font-weight: 700;
     font-family: 'IBM Plex Mono', monospace;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+    display: flex; align-items: center;
+    justify-content: center; gap: 10px;
     transition: all 0.15s;
     margin-top: 20px;
     letter-spacing: 0.06em;
     text-transform: lowercase;
     text-shadow: 0 0 12px rgba(255,255,255,0.3);
-    position: relative;
-    overflow: hidden;
   }
-  .btn-send::before {
-    content: '$ ';
-    color: var(--muted);
-    font-weight: 400;
-  }
+  .btn-send::before { content: '$ '; color: var(--muted); font-weight: 400; }
   .btn-send:hover {
     background: var(--surface2);
     border-color: var(--border2);
@@ -412,10 +399,8 @@
     letter-spacing: 0.04em;
   }
   .status.success {
-    display: flex;
-    background: var(--surface);
-    color: var(--accent3);
-    border-color: var(--accent3);
+    display: flex; background: var(--surface);
+    color: var(--accent3); border-color: var(--accent3);
     border-top: 1px solid var(--border);
     border-right: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
@@ -423,281 +408,748 @@
   }
   .status.success::before { content: '[OK] '; font-weight: 700; }
   .status.error {
-    display: flex;
-    background: var(--surface);
-    color: var(--accent2);
-    border-color: var(--accent2);
+    display: flex; background: var(--surface);
+    color: var(--accent2); border-color: var(--accent2);
     border-top: 1px solid var(--border);
     border-right: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
   }
   .status.error::before { content: '[ERR] '; font-weight: 700; }
 
-  /* ======= ANIMATIONS ======= */
-  @keyframes fade-in {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: translateY(0); }
+  /* ======= PREVIEW ======= */
+  .preview-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.14em;
+    text-transform: lowercase;
+    margin-bottom: 16px;
+  }
+  .preview-label::before { content: '##'; color: var(--muted2); margin-right: 2px; }
+  .preview-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .preview-label i { font-size: 14px; color: var(--border2); text-shadow: none; }
+
+  .discord-window {
+    background: var(--discord-bg);
+    border-radius: var(--radius-lg);
+    border: 1px solid #1e1f22;
+    overflow: hidden;
+    font-family: 'gg sans', 'Noto Sans', Whitney, 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
   }
 
-  .section:nth-child(2) { animation-delay: 0.05s; }
-  .section:nth-child(3) { animation-delay: 0.10s; }
-  .section:nth-child(4) { animation-delay: 0.15s; }
-  .section:nth-child(5) { animation-delay: 0.20s; }
+  .discord-titlebar {
+    background: #1e1f22;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 8px;
+    border-bottom: 1px solid #111214;
+    flex-shrink: 0;
+  }
+  .discord-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .d-red   { background: #e04444; }
+  .d-yel   { background: #e8a835; }
+  .d-grn   { background: #44b044; }
+  .discord-channel-name {
+    margin-left: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: #81848f;
+    letter-spacing: 0.04em;
+  }
+  .discord-channel-name::before { content: '# '; color: #4e5058; }
+
+  .discord-body {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .discord-msg-row {
+    display: flex;
+    gap: 14px;
+    padding: 4px 0;
+    border-radius: 4px;
+    transition: background 0.1s;
+  }
+  .discord-msg-row:hover { background: rgba(0,0,0,0.06); }
+
+  .discord-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: #5865f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    overflow: hidden;
+    margin-top: 2px;
+  }
+  .discord-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+  .discord-msg-content { flex: 1; min-width: 0; }
+
+  .discord-author-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .discord-author {
+    font-weight: 500;
+    color: #ffffff;
+    font-size: 15px;
+  }
+  .discord-timestamp {
+    font-size: 11px;
+    color: #4e5058;
+    font-weight: 400;
+  }
+
+  .discord-text {
+    color: #dbdee1;
+    line-height: 1.375;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 15px;
+  }
+  .discord-text:empty { display: none; }
+
+  /* Discord Embed */
+  .discord-embed {
+    display: none;
+    margin-top: 8px;
+    background: #2b2d31;
+    border-radius: 4px;
+    border-left: 4px solid var(--purple);
+    padding: 12px 16px 12px 12px;
+    max-width: 520px;
+    position: relative;
+    overflow: hidden;
+  }
+  .discord-embed.visible { display: block; }
+
+  .discord-embed-title {
+    font-weight: 600;
+    color: #00aff4;
+    font-size: 15px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    text-decoration: underline;
+    display: none;
+  }
+  .discord-embed-title.has-content { display: block; }
+  .discord-embed-title.no-url { color: #dbdee1; text-decoration: none; cursor: default; }
+
+  .discord-embed-desc {
+    color: #dbdee1;
+    font-size: 14px;
+    line-height: 1.375;
+    white-space: pre-wrap;
+    display: none;
+  }
+  .discord-embed-desc.has-content { display: block; }
+
+  .discord-embed-footer {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #87898c;
+    display: none;
+    align-items: center;
+    gap: 6px;
+  }
+  .discord-embed-footer.has-content { display: flex; }
+  .discord-embed-footer::before {
+    content: '';
+    width: 16px; height: 16px;
+    background: #5865f2;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .discord-embed-inner { display: flex; gap: 12px; }
+  .discord-embed-main  { flex: 1; min-width: 0; }
+
+  .discord-embed-thumbnail {
+    width: 72px; height: 72px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: none;
+    align-self: flex-start;
+  }
+  .discord-embed-thumbnail.visible { display: block; }
+
+  .discord-embed-image {
+    display: none;
+    margin-top: 10px;
+    border-radius: 4px;
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    width: 100%;
+  }
+  .discord-embed-image.visible { display: block; }
+
+  /* Empty state */
+  .preview-empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--muted2);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-align: center;
+  }
+  .preview-empty i { font-size: 32px; color: var(--border); text-shadow: none; }
+  .preview-empty.hidden { display: none; }
 
   /* ======= FOOTER ======= */
   .page-footer {
     text-align: center;
     font-size: 10px;
-    color: var(--muted);
+    color: var(--muted2);
     letter-spacing: 0.1em;
     margin-top: 28px;
-    padding-top: 20px;
+    padding-top: 16px;
     border-top: 1px solid var(--border);
   }
   .page-footer::before { content: '/* '; }
   .page-footer::after  { content: ' */'; }
+
+  /* ======= ANIMATIONS ======= */
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .section:nth-child(1) { animation-delay: 0.00s; }
+  .section:nth-child(2) { animation-delay: 0.05s; }
+  .section:nth-child(3) { animation-delay: 0.10s; }
+  .section:nth-child(4) { animation-delay: 0.15s; }
+
+  /* ======= MOBILE (<=768px) ======= */
+  @media (max-width: 768px) {
+
+    body {
+      height: auto;
+      overflow: auto;
+      overflow-x: hidden;
+    }
+
+    /* topbar: keep logo + title, hide secondary stuff */
+    .topbar {
+      padding: 0 16px;
+      gap: 12px;
+      flex-wrap: wrap;
+      height: auto;
+      min-height: var(--topbar-h);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-sep,
+    .topbar-eyebrow,
+    .topbar-sub { display: none; }
+    .topbar-badge { margin-left: auto; }
+
+    /* single column stacked layout */
+    .main {
+      display: flex;
+      flex-direction: column;
+      overflow: visible;
+      height: auto;
+    }
+
+    .panel-left {
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      overflow: visible;
+      padding: 20px 14px 28px;
+    }
+
+    .panel-right {
+      overflow: visible;
+      padding: 20px 14px 40px;
+    }
+
+    /* discord preview: no fixed height, grows with content */
+    .discord-window {
+      min-height: 200px;
+      height: auto;
+    }
+
+    /* make fields a bit taller for thumbs */
+    .field-inner input,
+    .field-inner textarea {
+      font-size: 15px;
+      padding: 6px 12px 10px;
+    }
+
+    .field-inner textarea { min-height: 100px; }
+
+    /* send button: easier to tap */
+    .btn-send {
+      padding: 16px 0;
+      font-size: 14px;
+      margin-top: 16px;
+    }
+
+    /* two-col inside field-group stays side-by-side on phone (it's narrow enough) */
+    .two-col { grid-template-columns: 1fr; }
+    .two-col .field-row:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+
+    /* embed preview thumbnail smaller on mobile */
+    .discord-embed-thumbnail { width: 56px; height: 56px; }
+
+    .page-footer { margin-top: 16px; }
+  }
+
+  /* ======= VERY SMALL (<=400px) ======= */
+  @media (max-width: 400px) {
+    .topbar-title { font-size: 14px; }
+    .topbar-badge { font-size: 9px; padding: 3px 8px; }
+    .hero-title { font-size: 20px; }
+    .panel-left, .panel-right { padding: 14px 10px 24px; }
+  }
   </style>
 </head>
 <body>
 
-<div class="wrap">
-
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-eyebrow">./Webhook --init</div>
-    <div class="hero-row">
-      <div class="hero-icon">
-        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- hook arc -->
-          <path d="M7 6 C7 6 4 6 4 10 C4 14 7 14 7 14 L18 14" stroke="#a78bfa" stroke-width="2" stroke-linecap="square" fill="none"/>
-          <!-- downward arrow -->
-          <line x1="18" y1="9" x2="18" y2="20" stroke="#e8e8e8" stroke-width="2" stroke-linecap="square"/>
-          <!-- arrowhead -->
-          <polyline points="14,16 18,20 22,16" stroke="#e8e8e8" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
-          <!-- impact point -->
-          <rect x="16" y="21" width="4" height="1.5" fill="#a78bfa"/>
-        </svg>
-      </div>
-      <div class="hero-title">Webhook</div>
-    </div>
-    <div class="hero-sub">send Discord messages via webhook</div>
-    <div class="hero-badge">
-      <i class="ti ti-brand-discord" aria-hidden="true"></i>
-      by Specyfikation
-    </div>
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <svg width="20" height="20" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7 6 C7 6 4 6 4 10 C4 14 7 14 7 14 L18 14" stroke="#a78bfa" stroke-width="2" stroke-linecap="square" fill="none"/>
+      <line x1="18" y1="9" x2="18" y2="20" stroke="#e8e8e8" stroke-width="2" stroke-linecap="square"/>
+      <polyline points="14,16 18,20 22,16" stroke="#e8e8e8" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+      <rect x="16" y="21" width="4" height="1.5" fill="#a78bfa"/>
+    </svg>
   </div>
-
-  <!-- CONNECTION -->
-  <div class="section">
-    <div class="section-label"><i class="ti ti-link"></i> connection</div>
-    <div class="field-group">
-      <div class="field-row">
-        <div class="field-icon"><i class="ti ti-webhook"></i></div>
-        <div class="field-inner">
-          <span class="field-lbl">Webhook URL</span>
-          <input type="url" id="wh-url" placeholder="https://discord.com/api/webhooks/..." />
-        </div>
-      </div>
-    </div>
+  <div class="topbar-title">Webhook</div>
+  <div class="topbar-sep"></div>
+  <div class="topbar-eyebrow">./webhook --init</div>
+  <div class="topbar-sub">send Discord messages via webhook</div>
+  <div class="topbar-badge">
+    <i class="ti ti-brand-discord" aria-hidden="true"></i>
+    by Specyfikation
   </div>
+</div>
 
-  <!-- BOT IDENTITY -->
-  <div class="section">
-    <div class="section-label"><i class="ti ti-user-circle"></i> bot identity</div>
-    <div class="field-group">
-      <div class="two-col">
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LEFT: FORM -->
+  <div class="panel-left">
+
+    <!-- CONNECTION -->
+    <div class="section">
+      <div class="section-label"><i class="ti ti-link"></i> connection</div>
+      <div class="field-group">
         <div class="field-row">
-          <div class="field-icon"><i class="ti ti-pencil"></i></div>
+          <div class="field-icon"><i class="ti ti-webhook"></i></div>
           <div class="field-inner">
-            <span class="field-lbl">Bot name</span>
-            <input type="text" id="bot-name" placeholder="Webhook" />
+            <span class="field-lbl">Webhook URL</span>
+            <input type="url" id="wh-url" placeholder="https://discord.com/api/webhooks/..." />
           </div>
         </div>
-        <div class="field-row">
+      </div>
+    </div>
+
+    <!-- BOT IDENTITY -->
+    <div class="section">
+      <div class="section-label"><i class="ti ti-user-circle"></i> bot identity</div>
+      <div class="field-group">
+        <div class="two-col">
+          <div class="field-row">
+            <div class="field-icon"><i class="ti ti-pencil"></i></div>
+            <div class="field-inner">
+              <span class="field-lbl">Bot name</span>
+              <input type="text" id="bot-name" placeholder="Webhook" oninput="updatePreview()" />
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-icon"><i class="ti ti-photo"></i></div>
+            <div class="field-inner">
+              <span class="field-lbl">Avatar URL</span>
+              <input type="url" id="avatar-url" placeholder="https://..." oninput="updatePreview()" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MESSAGE -->
+    <div class="section">
+      <div class="section-label"><i class="ti ti-message-2"></i> message</div>
+      <div class="field-group">
+        <div class="field-row" style="align-items:flex-start">
+          <div class="field-icon" style="padding-top:14px"><i class="ti ti-align-left"></i></div>
+          <div class="field-inner">
+            <span class="field-lbl">Content</span>
+            <textarea id="msg-content" placeholder="Type your message... **bold**, *italic*, @everyone..." maxlength="2000" oninput="updateCounter();updatePreview()"></textarea>
+            <div class="char-row" id="char-counter">0 / 2000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMBED -->
+    <div class="section">
+      <div class="section-label"><i class="ti ti-layout-bottombar"></i> embed</div>
+      <div class="embed-toggle-row" id="embed-toggle" onclick="toggleEmbed()">
+        <div class="embed-toggle-label">
+          <i class="ti ti-sparkles"></i> add an embed
+        </div>
+        <div class="toggle-switch" id="toggle-sw"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="embed-body" id="embed-body">
+        <div class="embed-accent" id="embed-accent"></div>
+        <div class="field-row" style="border-bottom:1px solid var(--border)">
+          <div class="field-icon"><i class="ti ti-heading"></i></div>
+          <div class="field-inner">
+            <span class="field-lbl">Title</span>
+            <input type="text" id="em-title" placeholder="Embed title" maxlength="256" oninput="updatePreview()" />
+          </div>
+        </div>
+        <div class="field-row" style="align-items:flex-start;border-bottom:1px solid var(--border)">
+          <div class="field-icon" style="padding-top:14px"><i class="ti ti-align-left"></i></div>
+          <div class="field-inner">
+            <span class="field-lbl">Description</span>
+            <textarea id="em-desc" style="min-height:64px" placeholder="Embed content..." maxlength="4096" oninput="updatePreview()"></textarea>
+          </div>
+        </div>
+        <div class="field-row" style="border-bottom:1px solid var(--border)">
+          <div class="field-icon"><i class="ti ti-link"></i></div>
+          <div class="field-inner">
+            <span class="field-lbl">Title URL</span>
+            <input type="url" id="em-url" placeholder="https://..." oninput="updatePreview()" />
+          </div>
+        </div>
+        <div class="field-row" style="border-bottom:1px solid var(--border)">
+          <div class="field-icon"><i class="ti ti-palette"></i></div>
+          <div class="field-inner">
+            <span class="field-lbl">Bar color</span>
+            <div class="color-row-inner">
+              <input type="color" id="em-color" value="#a78bfa" oninput="syncColor(this.value)" />
+              <input type="text" id="em-color-hex" value="#a78bfa" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)) syncColor(this.value)" />
+            </div>
+          </div>
+        </div>
+        <div class="field-row" style="border-bottom:1px solid var(--border)">
+          <div class="field-icon"><i class="ti ti-text-size"></i></div>
+          <div class="field-inner">
+            <span class="field-lbl">Footer</span>
+            <input type="text" id="em-footer" placeholder="Sent via Webhook" maxlength="2048" oninput="updatePreview()" />
+          </div>
+        </div>
+        <div class="field-row" style="border-bottom:1px solid var(--border)">
           <div class="field-icon"><i class="ti ti-photo"></i></div>
           <div class="field-inner">
-            <span class="field-lbl">Avatar URL</span>
-            <input type="url" id="avatar-url" placeholder="https://..." />
+            <span class="field-lbl">Image URL (large)</span>
+            <input type="url" id="em-image" placeholder="https://..." oninput="updatePreview()" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-icon"><i class="ti ti-layout-sidebar-right"></i></div>
+          <div class="field-inner">
+            <span class="field-lbl">Thumbnail URL (small)</span>
+            <input type="url" id="em-thumbnail" placeholder="https://..." oninput="updatePreview()" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-send" id="send-btn" onclick="sendWebhook()">
+      <i class="ti ti-send"></i> send message
+    </button>
+
+    <div class="status" id="status-box"></div>
+
+    <div class="page-footer">Webhook v4 - by Specyfikation - Discord webhook client</div>
+  </div>
+
+  <!-- RIGHT: PREVIEW -->
+  <div class="panel-right">
+    <div class="preview-label"><i class="ti ti-eye"></i> live preview</div>
+
+    <!-- Empty state -->
+    <div class="preview-empty" id="preview-empty">
+      <i class="ti ti-message-off"></i>
+      <span>// nothing to preview yet<br>type a message or add an embed</span>
+    </div>
+
+    <!-- Discord window -->
+    <div class="discord-window" id="discord-window" style="display:none">
+      <div class="discord-titlebar">
+        <div class="discord-dot d-red"></div>
+        <div class="discord-dot d-yel"></div>
+        <div class="discord-dot d-grn"></div>
+        <span class="discord-channel-name">general</span>
+      </div>
+      <div class="discord-body">
+        <div class="discord-msg-row">
+          <div class="discord-avatar" id="prev-avatar">H</div>
+          <div class="discord-msg-content">
+            <div class="discord-author-row">
+              <span class="discord-author" id="prev-author">Webhook</span>
+              <span class="discord-timestamp" id="prev-ts"></span>
+            </div>
+            <div class="discord-text" id="prev-text"></div>
+            <div class="discord-embed" id="prev-embed">
+              <div class="discord-embed-inner">
+                <div class="discord-embed-main">
+                  <div class="discord-embed-title" id="prev-em-title"></div>
+                  <div class="discord-embed-desc" id="prev-em-desc"></div>
+                  <img class="discord-embed-image" id="prev-em-image" src="" alt="" />
+                  <div class="discord-embed-footer" id="prev-em-footer"></div>
+                </div>
+                <img class="discord-embed-thumbnail" id="prev-em-thumbnail" src="" alt="" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- MESSAGE -->
-  <div class="section">
-    <div class="section-label"><i class="ti ti-message-2"></i> message</div>
-    <div class="field-group">
-      <div class="field-row" style="align-items:flex-start">
-        <div class="field-icon" style="padding-top:14px"><i class="ti ti-align-left"></i></div>
-        <div class="field-inner">
-          <span class="field-lbl">Content</span>
-          <textarea id="msg-content" placeholder="Type your message... **bold**, *italic*, @everyone..." maxlength="2000" oninput="updateCounter()"></textarea>
-          <div class="char-row" id="char-counter">0 / 2000</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- EMBED -->
-  <div class="section">
-    <div class="section-label"><i class="ti ti-layout-bottombar"></i> embed</div>
-    <div class="embed-toggle-row" id="embed-toggle" onclick="toggleEmbed()">
-      <div class="embed-toggle-label">
-        <i class="ti ti-sparkles"></i> add an embed
-      </div>
-      <div class="toggle-switch" id="toggle-sw"><div class="toggle-knob"></div></div>
-    </div>
-    <div class="embed-body" id="embed-body">
-      <div class="embed-accent" id="embed-accent"></div>
-      <div class="field-row" style="border-bottom:1px solid var(--border)">
-        <div class="field-icon"><i class="ti ti-heading"></i></div>
-        <div class="field-inner">
-          <span class="field-lbl">Title</span>
-          <input type="text" id="em-title" placeholder="Embed title" maxlength="256" />
-        </div>
-      </div>
-      <div class="field-row" style="align-items:flex-start;border-bottom:1px solid var(--border)">
-        <div class="field-icon" style="padding-top:14px"><i class="ti ti-align-left"></i></div>
-        <div class="field-inner">
-          <span class="field-lbl">Description</span>
-          <textarea id="em-desc" style="min-height:64px" placeholder="Embed content..." maxlength="4096"></textarea>
-        </div>
-      </div>
-      <div class="field-row" style="border-bottom:1px solid var(--border)">
-        <div class="field-icon"><i class="ti ti-link"></i></div>
-        <div class="field-inner">
-          <span class="field-lbl">Title URL</span>
-          <input type="url" id="em-url" placeholder="https://..." />
-        </div>
-      </div>
-      <div class="field-row" style="border-bottom:1px solid var(--border)">
-        <div class="field-icon"><i class="ti ti-palette"></i></div>
-        <div class="field-inner">
-          <span class="field-lbl">Bar color</span>
-          <div class="color-row-inner">
-            <input type="color" id="em-color" value="#a78bfa" oninput="syncColor(this.value)" />
-            <input type="text" id="em-color-hex" value="#a78bfa" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)) syncColor(this.value)" />
-          </div>
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field-icon"><i class="ti ti-text-size"></i></div>
-        <div class="field-inner">
-          <span class="field-lbl">Footer</span>
-          <input type="text" id="em-footer" placeholder="Sent via Webhook" maxlength="2048" />
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <button class="btn-send" id="send-btn" onclick="sendWebhook()">
-    <i class="ti ti-send"></i> send message
-  </button>
-
-  <div class="status" id="status-box"></div>
-
-  <div class="page-footer">Webhook v4 - by Specyfikation - Discord webhook client</div>
 </div>
 
 <script>
-var embedOn = false;
+  var embedOn = false
 
-function toggleEmbed() {
-  embedOn = !embedOn;
-  var sw  = document.getElementById('toggle-sw');
-  var body = document.getElementById('embed-body');
-  var row  = document.getElementById('embed-toggle');
-  sw.className   = 'toggle-switch' + (embedOn ? ' on' : '');
-  body.className = 'embed-body'    + (embedOn ? ' visible' : '');
-  row.className  = 'embed-toggle-row' + (embedOn ? ' active' : '');
-}
-
-function syncColor(v) {
-  document.getElementById('em-color').value     = v;
-  document.getElementById('em-color-hex').value  = v;
-  document.getElementById('embed-accent').style.background = v;
-  document.getElementById('embed-accent').style.boxShadow  = '0 0 8px ' + v + '88';
-}
-
-function updateCounter() {
-  var len = document.getElementById('msg-content').value.length;
-  var el  = document.getElementById('char-counter');
-  el.textContent = len + ' / 2000';
-  el.className   = 'char-row' + (len > 1800 ? ' warn' : '');
-}
-
-function hexToInt(h) { return parseInt(h.replace('#', ''), 16); }
-
-async function sendWebhook() {
-  var url     = document.getElementById('wh-url').value.trim();
-  var content = document.getElementById('msg-content').value.trim();
-  var botName = document.getElementById('bot-name').value.trim();
-  var avatarUrl = document.getElementById('avatar-url').value.trim();
-  var btn = document.getElementById('send-btn');
-
-  if (!url)              { showStatus('error', 'please enter the webhook URL.'); return; }
-  if (!content && !embedOn) { showStatus('error', 'write a message or enable an embed.'); return; }
-  if (content.length > 2000) { showStatus('error', 'message exceeds 2000 characters.'); return; }
-
-  var payload = {};
-  if (content) payload.content = content;
-  if (botName && botName.length >= 2) payload.username = botName;
-  if (avatarUrl && avatarUrl.startsWith('http')) payload.avatar_url = avatarUrl;
-
-  if (embedOn) {
-    var embed = {};
-    var title  = document.getElementById('em-title').value.trim();
-    var desc   = document.getElementById('em-desc').value.trim();
-    var emUrl  = document.getElementById('em-url').value.trim();
-    var color  = document.getElementById('em-color').value;
-    var footer = document.getElementById('em-footer').value.trim();
-    if (!title && !desc) { showStatus('error', 'the embed must have a title or a description.'); return; }
-    if (title)  embed.title       = title;
-    if (desc)   embed.description = desc;
-    if (emUrl && emUrl.startsWith('http')) embed.url = emUrl;
-    embed.color = hexToInt(color);
-    if (footer) embed.footer = { text: footer };
-    embed.timestamp = new Date().toISOString();
-    payload.embeds = [embed];
+  function toggleEmbed() {
+    embedOn = !embedOn
+    document.getElementById('toggle-sw').className = 'toggle-switch' + (embedOn ? ' on' : '')
+    document.getElementById('embed-body').className = 'embed-body' + (embedOn ? ' visible' : '')
+    document.getElementById('embed-toggle').className = 'embed-toggle-row' + (embedOn ? ' active' : '')
+    updatePreview()
   }
 
-  btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin .8s linear infinite"></i> sending...';
+  function syncColor(v) {
+    document.getElementById('em-color').value = v
+    document.getElementById('em-color-hex').value = v
+    // also update the little accent bar + preview border live
+    document.getElementById('embed-accent').style.background = v
+    document.getElementById('embed-accent').style.boxShadow = '0 0 8px ' + v + '88'
+    document.getElementById('prev-embed').style.borderLeftColor = v
+    updatePreview()
+  }
 
-  try {
-    var res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    if (res.ok || res.status === 204) {
-      showStatus('success', 'message sent to Discord!');
-      document.getElementById('msg-content').value = '';
-      updateCounter();
-    } else {
-      var detail = '';
-      try { var err = await res.json(); detail = err.message || JSON.stringify(err); } catch(e) { detail = 'unknown error'; }
-      showStatus('error', 'error ' + res.status + ': ' + detail);
+  function updateCounter() {
+    var len = document.getElementById('msg-content').value.length
+    var el = document.getElementById('char-counter')
+    el.textContent = len + ' / 2000'
+    el.className = len > 1800 ? 'char-row warn' : 'char-row'
+  }
+
+  // discord-style timestamp
+  function now() {
+    var d = new Date()
+    var h = d.getHours(), m = d.getMinutes()
+    var ampm = h < 12 ? 'AM' : 'PM'
+    h = h % 12 || 12
+    return 'Today at ' + h + ':' + (m < 10 ? '0'+m : m) + ' ' + ampm
+  }
+
+  function updatePreview() {
+    var content   = document.getElementById('msg-content').value
+    var botName   = document.getElementById('bot-name').value.trim() || 'Webhook'
+    var avatarUrl = document.getElementById('avatar-url').value.trim()
+
+    var emTitle = '', emDesc = '', emUrl = '', emFooter = '', emImage = '', emThumbnail = ''
+    var emColor = document.getElementById('em-color').value
+    if (embedOn) {
+      emTitle     = document.getElementById('em-title').value.trim()
+      emDesc      = document.getElementById('em-desc').value.trim()
+      emUrl       = document.getElementById('em-url').value.trim()
+      emFooter    = document.getElementById('em-footer').value.trim()
+      emImage     = document.getElementById('em-image').value.trim()
+      emThumbnail = document.getElementById('em-thumbnail').value.trim()
     }
-  } catch(e) {
-    showStatus('error', 'request blocked - check the webhook URL.');
+
+    var hasContent = content.trim() || (embedOn && (emTitle || emDesc || emImage || emThumbnail))
+    document.getElementById('preview-empty').className = hasContent ? 'preview-empty hidden' : 'preview-empty'
+    document.getElementById('discord-window').style.display = hasContent ? 'flex' : 'none'
+    if (!hasContent) return
+
+    document.getElementById('prev-author').textContent = botName
+    document.getElementById('prev-ts').textContent = now()
+
+    // avatar - show image if valid url, else fallback to first letter
+    var av = document.getElementById('prev-avatar')
+    if (avatarUrl && avatarUrl.startsWith('http')) {
+      var letter = botName.charAt(0).toUpperCase()
+      av.innerHTML = '<img src="' + avatarUrl + '" onerror="this.parentElement.textContent=\'' + letter + '\'" />'
+    } else {
+      av.textContent = botName.charAt(0).toUpperCase()
+    }
+
+    // basic markdown: **bold** *italic* `code`
+    var txt = content
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/`(.+?)`/g, '<code style="background:#111214;padding:1px 5px;border-radius:3px;font-family:monospace;font-size:13px">$1</code>')
+    document.getElementById('prev-text').innerHTML = txt
+
+    var embedEl = document.getElementById('prev-embed')
+    if (embedOn && (emTitle || emDesc || emImage || emThumbnail)) {
+      embedEl.className = 'discord-embed visible'
+      embedEl.style.borderLeftColor = emColor
+
+      var titleEl = document.getElementById('prev-em-title')
+      titleEl.textContent = emTitle
+      titleEl.className = 'discord-embed-title' + (emTitle ? ' has-content' : '')
+      if (emTitle && emUrl && emUrl.startsWith('http')) {
+        titleEl.style.color = '#00aff4'
+        titleEl.style.textDecoration = 'underline'
+        titleEl.style.cursor = 'pointer'
+        titleEl.onclick = function() { window.open(emUrl, '_blank') }
+      } else {
+        titleEl.style.color = '#dbdee1'
+        titleEl.style.textDecoration = 'none'
+        titleEl.style.cursor = 'default'
+        titleEl.onclick = null
+      }
+
+      document.getElementById('prev-em-desc').textContent = emDesc
+      document.getElementById('prev-em-desc').className = 'discord-embed-desc' + (emDesc ? ' has-content' : '')
+
+      document.getElementById('prev-em-footer').textContent = emFooter
+      document.getElementById('prev-em-footer').className = 'discord-embed-footer' + (emFooter ? ' has-content' : '')
+
+      // large image at the bottom of the embed
+      var imgEl = document.getElementById('prev-em-image')
+      if (emImage && emImage.startsWith('http')) {
+        imgEl.src = emImage
+        imgEl.className = 'discord-embed-image visible'
+        imgEl.onerror = function() { this.className = 'discord-embed-image' }
+      } else {
+        imgEl.src = ''
+        imgEl.className = 'discord-embed-image'
+      }
+
+      // small thumbnail top-right
+      var thumbEl = document.getElementById('prev-em-thumbnail')
+      if (emThumbnail && emThumbnail.startsWith('http')) {
+        thumbEl.src = emThumbnail
+        thumbEl.className = 'discord-embed-thumbnail visible'
+        thumbEl.onerror = function() { this.className = 'discord-embed-thumbnail' }
+      } else {
+        thumbEl.src = ''
+        thumbEl.className = 'discord-embed-thumbnail'
+      }
+    } else {
+      embedEl.className = 'discord-embed'
+    }
   }
 
-  btn.disabled = false;
-  btn.innerHTML = '<i class="ti ti-send"></i> send message';
-}
+  function hexToInt(h) {
+    return parseInt(h.replace('#', ''), 16)
+  }
 
-function showStatus(type, msg) {
-  var s = document.getElementById('status-box');
-  s.className = 'status ' + type;
-  s.textContent = msg;
-}
+  async function sendWebhook() {
+    var url       = document.getElementById('wh-url').value.trim()
+    var content   = document.getElementById('msg-content').value.trim()
+    var botName   = document.getElementById('bot-name').value.trim()
+    var avatarUrl = document.getElementById('avatar-url').value.trim()
+    var btn       = document.getElementById('send-btn')
 
-/* spin keyframe */
-var styleEl = document.createElement('style');
-styleEl.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
-document.head.appendChild(styleEl);
+    if (!url) { showStatus('error', 'please enter the webhook URL.'); return }
+    if (!content && !embedOn) { showStatus('error', 'write a message or enable an embed.'); return }
+    if (content.length > 2000) { showStatus('error', 'message exceeds 2000 characters.'); return }
+
+    var payload = {}
+    if (content) payload.content = content
+    if (botName.length >= 2) payload.username = botName
+    if (avatarUrl.startsWith('http')) payload.avatar_url = avatarUrl
+
+    if (embedOn) {
+      var embed    = {}
+      var title    = document.getElementById('em-title').value.trim()
+      var desc     = document.getElementById('em-desc').value.trim()
+      var emUrl    = document.getElementById('em-url').value.trim()
+      var color    = document.getElementById('em-color').value
+      var footer   = document.getElementById('em-footer').value.trim()
+      var imgUrl   = document.getElementById('em-image').value.trim()
+      var thumbUrl = document.getElementById('em-thumbnail').value.trim()
+
+      if (!title && !desc && !imgUrl && !thumbUrl) {
+        showStatus('error', 'the embed needs at least a title, description, or image.')
+        return
+      }
+
+      if (title)                        embed.title       = title
+      if (desc)                         embed.description = desc
+      if (emUrl.startsWith('http'))     embed.url         = emUrl
+      if (footer)                       embed.footer      = { text: footer }
+      if (imgUrl.startsWith('http'))    embed.image       = { url: imgUrl }
+      if (thumbUrl.startsWith('http'))  embed.thumbnail   = { url: thumbUrl }
+      embed.color     = hexToInt(color)
+      embed.timestamp = new Date().toISOString()
+      payload.embeds  = [embed]
+    }
+
+    btn.disabled = true
+    btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin .8s linear infinite"></i> sending...'
+
+    try {
+      var res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+
+      if (res.ok || res.status === 204) {
+        showStatus('success', 'message sent to Discord!')
+        document.getElementById('msg-content').value = ''
+        updateCounter()
+        updatePreview()
+      } else {
+        var detail = 'unknown error'
+        try { var err = await res.json(); detail = err.message || JSON.stringify(err) } catch(e) {}
+        showStatus('error', 'error ' + res.status + ': ' + detail)
+      }
+    } catch(e) {
+      showStatus('error', 'request blocked - check the webhook URL.')
+    }
+
+    btn.disabled = false
+    btn.innerHTML = '<i class="ti ti-send"></i> send message'
+  }
+
+  function showStatus(type, msg) {
+    var s = document.getElementById('status-box')
+    s.className = 'status ' + type
+    s.textContent = msg
+  }
+
+  // spin keyframe for the loading button
+  var s = document.createElement('style')
+  s.textContent = '@keyframes spin { to { transform: rotate(360deg) } }'
+  document.head.appendChild(s)
 </script>
 </body>
 </html>
