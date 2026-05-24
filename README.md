@@ -6,7 +6,7 @@ Send Discord messages through any webhook — plain text, embeds, custom bot ide
 
 [![Version](https://img.shields.io/badge/version-4.0-5865f2?style=flat-square)](https://github.com/specyfikation/HookShot) [![Discord Webhooks](https://img.shields.io/badge/Discord%20API-webhooks-5865f2?style=flat-square&logo=discord&logoColor=white)](https://discord.com/developers/docs/resources/webhook)
 
-[⬇ Download](https://github.com/specyfikation/Webhook-Discord-Creator/blob/main/index.html) · [View source]([https://github.com/specyfikation/HookShot](https://github.com/specyfikation/Webhook-Discord-Creator/blob/main/index.html) · [Report a bug](https://github.com/specyfikation/HookShot/issues)
+[⬇ Download](https://github.com/specyfikation/Webhook-Discord-Creator/blob/main/index.html) · [View source](https://github.com/specyfikation/Webhook-Discord-Creator/blob/main/index.html)(https://github.com/specyfikation/Webhook-Discord-Creator/blob/main/index.html) · [Report a bug](https://github.com/specyfikation/HookShot/issues)
 
 ---
 
