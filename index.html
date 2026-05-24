@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HookShot - Discord Webhook</title>
+  <title>Webhook - Discord Webhook</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='26' height='26' viewBox='0 0 26 26' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 6 C7 6 4 6 4 10 C4 14 7 14 7 14 L18 14' stroke='%23a78bfa' stroke-width='2' stroke-linecap='square' fill='none'/%3E%3Cline x1='18' y1='9' x2='18' y2='20' stroke='%23e8e8e8' stroke-width='2' stroke-linecap='square'/%3E%3Cpolyline points='14,16 18,20 22,16' stroke='%23e8e8e8' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter' fill='none'/%3E%3Crect x='16' y='21' width='4' height='1.5' fill='%23a78bfa'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -463,53 +464,53 @@
 
   <!-- HERO -->
   <div class="hero">
-    <div class="hero-eyebrow">./hookshot --init</div>
+    <div class="hero-eyebrow">./Webhook --init</div>
     <div class="hero-row">
       <div class="hero-icon">
         <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- arc du hook -->
+          <!-- hook arc -->
           <path d="M7 6 C7 6 4 6 4 10 C4 14 7 14 7 14 L18 14" stroke="#a78bfa" stroke-width="2" stroke-linecap="square" fill="none"/>
-          <!-- flèche vers le bas -->
+          <!-- downward arrow -->
           <line x1="18" y1="9" x2="18" y2="20" stroke="#e8e8e8" stroke-width="2" stroke-linecap="square"/>
-          <!-- pointe de flèche -->
+          <!-- arrowhead -->
           <polyline points="14,16 18,20 22,16" stroke="#e8e8e8" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
-          <!-- point d'impact -->
+          <!-- impact point -->
           <rect x="16" y="21" width="4" height="1.5" fill="#a78bfa"/>
         </svg>
       </div>
-      <div class="hero-title">HookShot</div>
+      <div class="hero-title">Webhook</div>
     </div>
-    <div class="hero-sub">envoie des messages Discord via webhook</div>
+    <div class="hero-sub">send Discord messages via webhook</div>
     <div class="hero-badge">
       <i class="ti ti-brand-discord" aria-hidden="true"></i>
       by Specyfikation
     </div>
   </div>
 
-  <!-- CONNEXION -->
+  <!-- CONNECTION -->
   <div class="section">
-    <div class="section-label"><i class="ti ti-link"></i> connexion</div>
+    <div class="section-label"><i class="ti ti-link"></i> connection</div>
     <div class="field-group">
       <div class="field-row">
         <div class="field-icon"><i class="ti ti-webhook"></i></div>
         <div class="field-inner">
-          <span class="field-lbl">URL du webhook</span>
+          <span class="field-lbl">Webhook URL</span>
           <input type="url" id="wh-url" placeholder="https://discord.com/api/webhooks/..." />
         </div>
       </div>
     </div>
   </div>
 
-  <!-- IDENTITÉ BOT -->
+  <!-- BOT IDENTITY -->
   <div class="section">
-    <div class="section-label"><i class="ti ti-user-circle"></i> identité du bot</div>
+    <div class="section-label"><i class="ti ti-user-circle"></i> bot identity</div>
     <div class="field-group">
       <div class="two-col">
         <div class="field-row">
           <div class="field-icon"><i class="ti ti-pencil"></i></div>
           <div class="field-inner">
-            <span class="field-lbl">Nom du bot</span>
-            <input type="text" id="bot-name" placeholder="HookShot" />
+            <span class="field-lbl">Bot name</span>
+            <input type="text" id="bot-name" placeholder="Webhook" />
           </div>
         </div>
         <div class="field-row">
@@ -530,8 +531,8 @@
       <div class="field-row" style="align-items:flex-start">
         <div class="field-icon" style="padding-top:14px"><i class="ti ti-align-left"></i></div>
         <div class="field-inner">
-          <span class="field-lbl">Contenu</span>
-          <textarea id="msg-content" placeholder="Tape ton message... **gras**, *italique*, @everyone..." maxlength="2000" oninput="updateCounter()"></textarea>
+          <span class="field-lbl">Content</span>
+          <textarea id="msg-content" placeholder="Type your message... **bold**, *italic*, @everyone..." maxlength="2000" oninput="updateCounter()"></textarea>
           <div class="char-row" id="char-counter">0 / 2000</div>
         </div>
       </div>
@@ -543,7 +544,7 @@
     <div class="section-label"><i class="ti ti-layout-bottombar"></i> embed</div>
     <div class="embed-toggle-row" id="embed-toggle" onclick="toggleEmbed()">
       <div class="embed-toggle-label">
-        <i class="ti ti-sparkles"></i> ajouter un embed
+        <i class="ti ti-sparkles"></i> add an embed
       </div>
       <div class="toggle-switch" id="toggle-sw"><div class="toggle-knob"></div></div>
     </div>
@@ -552,28 +553,28 @@
       <div class="field-row" style="border-bottom:1px solid var(--border)">
         <div class="field-icon"><i class="ti ti-heading"></i></div>
         <div class="field-inner">
-          <span class="field-lbl">Titre</span>
-          <input type="text" id="em-title" placeholder="Titre de l'embed" maxlength="256" />
+          <span class="field-lbl">Title</span>
+          <input type="text" id="em-title" placeholder="Embed title" maxlength="256" />
         </div>
       </div>
       <div class="field-row" style="align-items:flex-start;border-bottom:1px solid var(--border)">
         <div class="field-icon" style="padding-top:14px"><i class="ti ti-align-left"></i></div>
         <div class="field-inner">
           <span class="field-lbl">Description</span>
-          <textarea id="em-desc" style="min-height:64px" placeholder="Contenu de l'embed..." maxlength="4096"></textarea>
+          <textarea id="em-desc" style="min-height:64px" placeholder="Embed content..." maxlength="4096"></textarea>
         </div>
       </div>
       <div class="field-row" style="border-bottom:1px solid var(--border)">
         <div class="field-icon"><i class="ti ti-link"></i></div>
         <div class="field-inner">
-          <span class="field-lbl">URL du titre</span>
+          <span class="field-lbl">Title URL</span>
           <input type="url" id="em-url" placeholder="https://..." />
         </div>
       </div>
       <div class="field-row" style="border-bottom:1px solid var(--border)">
         <div class="field-icon"><i class="ti ti-palette"></i></div>
         <div class="field-inner">
-          <span class="field-lbl">Couleur de la barre</span>
+          <span class="field-lbl">Bar color</span>
           <div class="color-row-inner">
             <input type="color" id="em-color" value="#a78bfa" oninput="syncColor(this.value)" />
             <input type="text" id="em-color-hex" value="#a78bfa" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)) syncColor(this.value)" />
@@ -584,19 +585,19 @@
         <div class="field-icon"><i class="ti ti-text-size"></i></div>
         <div class="field-inner">
           <span class="field-lbl">Footer</span>
-          <input type="text" id="em-footer" placeholder="Envoyé via HookShot" maxlength="2048" />
+          <input type="text" id="em-footer" placeholder="Sent via Webhook" maxlength="2048" />
         </div>
       </div>
     </div>
   </div>
 
   <button class="btn-send" id="send-btn" onclick="sendWebhook()">
-    <i class="ti ti-send"></i> envoyer le message
+    <i class="ti ti-send"></i> send message
   </button>
 
   <div class="status" id="status-box"></div>
 
-  <div class="page-footer">HookShot v4 - by Specyfikation - webhook Discord client</div>
+  <div class="page-footer">Webhook v4 - by Specyfikation - Discord webhook client</div>
 </div>
 
 <script>
@@ -635,9 +636,9 @@ async function sendWebhook() {
   var avatarUrl = document.getElementById('avatar-url').value.trim();
   var btn = document.getElementById('send-btn');
 
-  if (!url)              { showStatus('error', 'saisis l\'URL du webhook.'); return; }
-  if (!content && !embedOn) { showStatus('error', 'écris un message ou active un embed.'); return; }
-  if (content.length > 2000) { showStatus('error', 'le message dépasse 2000 caractères.'); return; }
+  if (!url)              { showStatus('error', 'please enter the webhook URL.'); return; }
+  if (!content && !embedOn) { showStatus('error', 'write a message or enable an embed.'); return; }
+  if (content.length > 2000) { showStatus('error', 'message exceeds 2000 characters.'); return; }
 
   var payload = {};
   if (content) payload.content = content;
@@ -651,7 +652,7 @@ async function sendWebhook() {
     var emUrl  = document.getElementById('em-url').value.trim();
     var color  = document.getElementById('em-color').value;
     var footer = document.getElementById('em-footer').value.trim();
-    if (!title && !desc) { showStatus('error', 'l\'embed doit avoir un titre ou une description.'); return; }
+    if (!title && !desc) { showStatus('error', 'the embed must have a title or a description.'); return; }
     if (title)  embed.title       = title;
     if (desc)   embed.description = desc;
     if (emUrl && emUrl.startsWith('http')) embed.url = emUrl;
@@ -662,7 +663,7 @@ async function sendWebhook() {
   }
 
   btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin .8s linear infinite"></i> envoi en cours...';
+  btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin .8s linear infinite"></i> sending...';
 
   try {
     var res = await fetch(url, {
@@ -671,20 +672,20 @@ async function sendWebhook() {
       body: JSON.stringify(payload)
     });
     if (res.ok || res.status === 204) {
-      showStatus('success', 'message envoyé dans Discord !');
+      showStatus('success', 'message sent to Discord!');
       document.getElementById('msg-content').value = '';
       updateCounter();
     } else {
       var detail = '';
-      try { var err = await res.json(); detail = err.message || JSON.stringify(err); } catch(e) { detail = 'erreur inconnue'; }
-      showStatus('error', 'erreur ' + res.status + ' : ' + detail);
+      try { var err = await res.json(); detail = err.message || JSON.stringify(err); } catch(e) { detail = 'unknown error'; }
+      showStatus('error', 'error ' + res.status + ': ' + detail);
     }
   } catch(e) {
-    showStatus('error', 'requête bloquée - vérifie l\'URL du webhook.');
+    showStatus('error', 'request blocked - check the webhook URL.');
   }
 
   btn.disabled = false;
-  btn.innerHTML = '<i class="ti ti-send"></i> envoyer le message';
+  btn.innerHTML = '<i class="ti ti-send"></i> send message';
 }
 
 function showStatus(type, msg) {
