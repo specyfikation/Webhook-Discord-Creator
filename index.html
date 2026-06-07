@@ -7,31 +7,37 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='26' height='26' viewBox='0 0 26 26' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 6 C7 6 4 6 4 10 C4 14 7 14 7 14 L18 14' stroke='%23a78bfa' stroke-width='2' stroke-linecap='square' fill='none'/%3E%3Cline x1='18' y1='9' x2='18' y2='20' stroke='%23e8e8e8' stroke-width='2' stroke-linecap='square'/%3E%3Cpolyline points='14,16 18,20 22,16' stroke='%23e8e8e8' stroke-width='2' stroke-linecap='square' stroke-linejoin='miter' fill='none'/%3E%3Crect x='16' y='21' width='4' height='1.5' fill='%23a78bfa'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" />
   <style>
   :root {
-    --bg: #090909;
-    --surface: #111111;
-    --surface2: #181818;
-    --border: #3a3a3a;
-    --border2: #666;
-    --text: #c8c8c8;
-    --text-hi: #ffffff;
-    --muted: #888888;
-    --muted2: #555555;
-    --accent: #e8e8e8;
-    --accent2: #e04444;
-    --accent3: #88cc44;
-    --purple: #a78bfa;
-    --purple-dim: #7c3aed33;
+    /* Discord exact palette */
+    --bg: #1e1f22;
+    --sidebar-bg: #2b2d31;
+    --surface: #313338;
+    --surface2: #383a40;
+    --surface3: #404249;
+    --input-bg: #1e1f22;
+    --border: #1e1f22;
+    --border2: #3f4147;
+    --text: #dbdee1;
+    --text-hi: #f2f3f5;
+    --muted: #949ba4;
+    --muted2: #6d6f78;
+    --accent: #5865f2;
+    --accent-hover: #4752c4;
+    --accent2: #ed4245;
+    --accent3: #57f287;
+    --channel-text: #949ba4;
+    --channel-hover: rgba(255,255,255,0.06);
+    --channel-active: rgba(255,255,255,0.1);
     --discord-bg: #313338;
     --discord-surface: #2b2d31;
-    --discord-msg: #383a40;
-    --radius-lg: 12px;
-    --radius-md: 8px;
-    --radius-sm: 5px;
-    --topbar-h: 58px;
+    --radius-lg: 8px;
+    --radius-md: 4px;
+    --radius-sm: 3px;
+    --topbar-h: 48px;
+    --font-discord: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,116 +46,78 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: var(--font-discord);
     font-size: 14px;
     height: 100vh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    text-shadow: 0 0 8px rgba(255,255,255,0.04);
   }
 
-  /* Scanlines */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      to bottom, transparent, transparent 2px,
-      rgba(0,0,0,0.22) 2px, rgba(0,0,0,0.22) 4px
-    );
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.35;
-  }
-
-  /* Vignette */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.5) 100%);
-    pointer-events: none;
-    z-index: 9998;
-  }
-
-  /* ======= TOPBAR ======= */
+  /* ======= TOPBAR — Discord channel header ======= */
   .topbar {
     height: var(--topbar-h);
     min-height: var(--topbar-h);
     background: var(--surface);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(0,0,0,0.24);
     display: flex;
     align-items: center;
-    padding: 0 28px;
-    gap: 20px;
+    padding: 0 16px;
+    gap: 8px;
     z-index: 10;
     position: relative;
     flex-shrink: 0;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
   }
 
   .topbar-logo {
-    width: 32px;
-    height: 32px;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius-sm);
+    width: 24px;
+    height: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    color: var(--muted2);
   }
 
   .topbar-title {
     font-size: 16px;
     font-weight: 700;
     color: var(--text-hi);
-    letter-spacing: -0.01em;
-    text-transform: uppercase;
-    text-shadow: 0 0 20px rgba(255,255,255,0.35);
+    letter-spacing: 0;
   }
+  .topbar-title::before { content: '# '; color: var(--muted2); font-weight: 900; }
 
   .topbar-sep {
     width: 1px;
     height: 20px;
-    background: var(--border);
+    background: var(--border2);
+    margin: 0 4px;
   }
 
   .topbar-sub {
-    font-size: 11px;
+    font-size: 14px;
     color: var(--muted);
-    letter-spacing: 0.06em;
+    font-weight: 400;
   }
-  .topbar-sub::before { content: '# '; color: var(--border2); }
 
   .topbar-badge {
     margin-left: auto;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: var(--purple-dim);
-    border: 1px solid rgba(167,139,250,0.25);
-    border-radius: 999px;
-    color: var(--purple);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    padding: 4px 12px;
-    text-shadow: none;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 400;
   }
+  .topbar-badge i { color: var(--muted2); font-size: 20px; }
 
-  .topbar-eyebrow {
-    font-size: 10px;
-    color: var(--muted2);
-    letter-spacing: 0.08em;
-    margin-left: 4px;
-  }
-  .topbar-eyebrow::before { content: '$ '; color: var(--border2); }
+  .topbar-eyebrow { display: none; }
 
   /* ======= MAIN LAYOUT ======= */
   .main {
     display: grid;
-    grid-template-columns: 380px 1fr;
+    grid-template-columns: 360px 1fr;
     grid-template-rows: 1fr;
     flex: 1;
     overflow: hidden;
@@ -159,64 +127,69 @@
 
   /* ======= LEFT PANEL ======= */
   .panel-left {
-    border-right: 1px solid var(--border);
+    background: var(--sidebar-bg);
+    border-right: 1px solid rgba(0,0,0,0.18);
     overflow-y: auto;
-    padding: 28px 24px 40px;
+    padding: 16px 8px 40px;
     display: flex;
     flex-direction: column;
     gap: 0;
     scrollbar-width: thin;
-    scrollbar-color: var(--border2) transparent;
+    scrollbar-color: var(--surface2) transparent;
   }
   .panel-left::-webkit-scrollbar { width: 4px; }
-  .panel-left::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  .panel-left::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 4px; }
 
   /* ======= RIGHT PANEL ======= */
   .panel-right {
+    background: var(--surface);
     overflow-y: auto;
-    padding: 28px 32px 40px;
+    padding: 20px 24px 40px;
     display: flex;
     flex-direction: column;
     gap: 0;
     scrollbar-width: thin;
-    scrollbar-color: var(--border2) transparent;
+    scrollbar-color: var(--surface2) transparent;
   }
   .panel-right::-webkit-scrollbar { width: 4px; }
-  .panel-right::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  .panel-right::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 4px; }
 
-  /* ======= SECTION LABEL ======= */
+  /* ======= SECTION LABEL — Discord category header ======= */
   .section-label {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 10px;
+    gap: 4px;
+    font-size: 11px;
     font-weight: 700;
     color: var(--muted);
-    letter-spacing: 0.14em;
-    text-transform: lowercase;
-    margin-bottom: 8px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    padding: 16px 8px 4px;
   }
-  .section-label::before { content: '##'; color: var(--muted2); margin-right: 2px; }
-  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-  .section-label i { font-size: 14px; color: var(--border2); text-shadow: none; }
+  .section-label::before { display: none; }
+  .section-label::after { display: none; }
+  .section-label i { font-size: 12px; color: var(--muted2); }
 
-  /* ======= FIELD GROUP ======= */
-  .section { margin-bottom: 22px; animation: fade-in 0.4s ease both; }
+  /* ======= FIELD GROUP — Discord input style ======= */
+  .section { margin-bottom: 4px; animation: fade-in 0.3s ease both; }
 
   .field-group {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--border);
+    background: var(--input-bg);
+    border: none;
+    border-left: none;
     border-radius: var(--radius-md);
     overflow: hidden;
-    transition: border-left-color 0.2s;
+    transition: box-shadow 0.15s;
   }
-  .field-group:focus-within { border-left-color: var(--accent); }
+  .field-group:focus-within {
+    box-shadow: 0 0 0 2px var(--accent);
+  }
 
   .field-row {
     display: flex;
     align-items: stretch;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
   }
   .field-row:last-child { border-bottom: none; }
 
@@ -225,221 +198,203 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--muted);
+    color: var(--muted2);
     flex-shrink: 0;
     font-size: 15px;
-    background: var(--surface2);
-    border-right: 1px solid var(--border);
-    text-shadow: none;
+    background: transparent;
+    border-right: none;
     transition: color 0.15s;
   }
-  .field-row:focus-within .field-icon { color: var(--text); }
+  .field-row:focus-within .field-icon { color: var(--muted); }
 
   .field-inner { flex: 1; display: flex; flex-direction: column; }
 
   .field-lbl {
-    font-size: 9px;
-    letter-spacing: 0.12em;
+    font-size: 11px;
+    letter-spacing: 0.02em;
     color: var(--muted);
-    padding: 7px 12px 0;
+    padding: 8px 12px 2px;
     font-weight: 700;
-    text-transform: lowercase;
+    text-transform: uppercase;
   }
-  .field-lbl::before { content: '// '; color: var(--muted2); }
+  .field-lbl::before { display: none; }
 
   .field-inner input,
   .field-inner textarea {
     border: none;
     outline: none;
-    padding: 4px 12px 8px;
-    font-size: 13px;
+    padding: 4px 12px 10px;
+    font-size: 16px;
     color: var(--text-hi);
     background: transparent;
     width: 100%;
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: var(--font-discord);
     resize: none;
-    caret-color: var(--accent);
+    caret-color: var(--text-hi);
   }
   .field-inner input::placeholder,
-  .field-inner textarea::placeholder { color: var(--muted); opacity: 0.7; }
+  .field-inner textarea::placeholder { color: var(--muted2); }
   .field-inner textarea { min-height: 110px; resize: vertical; }
 
   .char-row {
     display: flex;
     justify-content: flex-end;
     padding: 0 12px 6px;
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 0.06em;
+    font-size: 12px;
+    color: var(--muted2);
   }
   .char-row.warn { color: var(--accent2); font-weight: 700; }
 
   /* ======= TWO COL ======= */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; }
   .two-col .field-row { border-bottom: none; }
-  .two-col .field-row:first-child { border-right: 1px solid var(--border); }
+  .two-col .field-row:first-child { border-right: 1px solid rgba(255,255,255,0.04); }
 
   /* ======= EMBED TOGGLE ======= */
   .embed-toggle-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: .75rem 1rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--border);
+    padding: 10px 12px;
+    background: var(--input-bg);
+    border: none;
     border-radius: var(--radius-md);
     cursor: pointer;
-    margin-bottom: 4px;
-    transition: border-left-color 0.2s;
-    font-size: 13px;
-    font-weight: 700;
+    margin-bottom: 2px;
+    font-size: 14px;
+    font-weight: 500;
     color: var(--text);
-    letter-spacing: 0.03em;
+    transition: background 0.1s;
   }
-  .embed-toggle-row:hover { border-left-color: var(--border2); }
-  .embed-toggle-row.active { border-left-color: var(--purple); }
+  .embed-toggle-row:hover { background: var(--surface3); }
+  .embed-toggle-row.active { background: var(--input-bg); }
 
   .embed-toggle-label { display: flex; align-items: center; gap: 8px; }
-  .embed-toggle-label i { font-size: 15px; color: var(--border2); text-shadow: none; }
-  .embed-toggle-label::before { content: '$ '; color: var(--muted); font-weight: 400; }
+  .embed-toggle-label i { font-size: 16px; color: var(--muted); }
+  .embed-toggle-label::before { display: none; }
 
   .toggle-switch {
-    width: 36px; height: 18px;
+    width: 44px; height: 24px;
     background: var(--muted2);
-    border: 1px solid var(--border2);
+    border: none;
     border-radius: 999px;
     position: relative;
     transition: background .2s;
     flex-shrink: 0;
   }
-  .toggle-switch.on { background: var(--purple-dim); border-color: var(--purple); }
+  .toggle-switch.on { background: var(--accent); }
   .toggle-knob {
-    width: 12px; height: 12px;
-    background: var(--muted);
+    width: 18px; height: 18px;
+    background: #fff;
     border-radius: 50%;
     position: absolute;
-    top: 2px; left: 2px;
-    transition: left .2s, background .2s;
+    top: 3px; left: 3px;
+    transition: left .2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
   }
-  .toggle-switch.on .toggle-knob { left: 20px; background: var(--purple); box-shadow: 0 0 6px rgba(167,139,250,0.5); }
+  .toggle-switch.on .toggle-knob { left: 23px; }
 
   /* ======= EMBED BODY ======= */
   .embed-body {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-top: none;
-    border-left: 3px solid var(--purple);
+    background: var(--input-bg);
+    border: none;
+    border-left: 4px solid var(--accent);
     border-radius: 0 0 var(--radius-md) var(--radius-md);
     overflow: hidden;
     display: none;
   }
   .embed-body.visible { display: block; animation: fade-in 0.2s ease both; }
-  .embed-accent { height: 2px; background: var(--purple); box-shadow: 0 0 8px rgba(167,139,250,0.5); }
+  .embed-accent { height: 3px; background: var(--accent); display: none; }
 
   .color-row-inner {
     display: flex; align-items: center;
-    gap: 10px; padding: 4px 12px 8px;
+    gap: 10px; padding: 4px 12px 10px;
   }
   .color-row-inner input[type=color] {
-    width: 30px; height: 24px;
-    border: 1px solid var(--border2);
+    width: 32px; height: 26px;
+    border: 2px solid var(--border2);
     border-radius: var(--radius-sm);
     padding: 2px; cursor: pointer;
     background: var(--surface2);
   }
   .color-row-inner input[type=text] {
     flex: 1; border: none; outline: none;
-    font-size: 13px; color: var(--text-hi);
+    font-size: 16px; color: var(--text-hi);
     background: transparent;
-    font-family: 'IBM Plex Mono', monospace;
-    caret-color: var(--accent);
+    font-family: var(--font-discord);
+    caret-color: var(--text-hi);
   }
 
-  /* ======= BUTTON ======= */
+  /* ======= BUTTON — Discord style ======= */
   .btn-send {
     width: 100%;
-    background: var(--surface);
-    color: var(--text-hi);
-    border: 1px solid var(--border);
-    border-top: 2px solid var(--accent);
-    border-radius: var(--radius-md);
-    padding: 13px 0;
-    font-size: 13px; font-weight: 700;
-    font-family: 'IBM Plex Mono', monospace;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 16px;
+    font-size: 14px; font-weight: 500;
+    font-family: var(--font-discord);
     cursor: pointer;
     display: flex; align-items: center;
-    justify-content: center; gap: 10px;
-    transition: all 0.15s;
-    margin-top: 20px;
-    letter-spacing: 0.06em;
-    text-transform: lowercase;
-    text-shadow: 0 0 12px rgba(255,255,255,0.3);
+    justify-content: center; gap: 8px;
+    transition: background 0.17s;
+    margin-top: 16px;
+    letter-spacing: 0;
+    text-transform: none;
   }
-  .btn-send::before { content: '$ '; color: var(--muted); font-weight: 400; }
-  .btn-send:hover {
-    background: var(--surface2);
-    border-color: var(--border2);
-    border-top-color: var(--text-hi);
-    box-shadow: 0 0 20px rgba(255,255,255,0.06);
-  }
+  .btn-send::before { display: none; }
+  .btn-send:hover { background: var(--accent-hover); }
   .btn-send:active { transform: scale(.98); }
-  .btn-send:disabled { opacity: .4; cursor: not-allowed; }
+  .btn-send:disabled { background: #4752c4; opacity: .5; cursor: not-allowed; }
 
   /* ======= STATUS ======= */
   .status {
-    margin-top: .75rem;
-    padding: 10px 14px;
-    font-size: 12px;
+    margin-top: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
     display: none;
     align-items: center;
-    gap: 10px;
-    border-left: 3px solid;
-    border-radius: var(--radius-md);
-    letter-spacing: 0.04em;
+    gap: 8px;
+    border-radius: 3px;
   }
   .status.success {
-    display: flex; background: var(--surface);
-    color: var(--accent3); border-color: var(--accent3);
-    border-top: 1px solid var(--border);
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    text-shadow: 0 0 8px rgba(136,204,68,0.4);
+    display: flex; background: rgba(87,242,135,0.1);
+    color: var(--accent3);
+    border: 1px solid rgba(87,242,135,0.2);
   }
-  .status.success::before { content: '[OK] '; font-weight: 700; }
+  .status.success::before { content: ''; }
   .status.error {
-    display: flex; background: var(--surface);
-    color: var(--accent2); border-color: var(--accent2);
-    border-top: 1px solid var(--border);
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
+    display: flex; background: rgba(237,66,69,0.1);
+    color: var(--accent2);
+    border: 1px solid rgba(237,66,69,0.2);
   }
-  .status.error::before { content: '[ERR] '; font-weight: 700; }
+  .status.error::before { content: ''; }
 
   /* ======= PREVIEW ======= */
   .preview-label {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 10px;
+    gap: 6px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--muted);
-    letter-spacing: 0.14em;
-    text-transform: lowercase;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
     margin-bottom: 16px;
   }
-  .preview-label::before { content: '##'; color: var(--muted2); margin-right: 2px; }
-  .preview-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-  .preview-label i { font-size: 14px; color: var(--border2); text-shadow: none; }
+  .preview-label::before { display: none; }
+  .preview-label::after { display: none; }
+  .preview-label i { font-size: 14px; color: var(--muted2); }
 
   .discord-window {
     background: var(--discord-bg);
-    border-radius: var(--radius-lg);
-    border: 1px solid #1e1f22;
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.3);
     overflow: hidden;
-    font-family: 'gg sans', 'Noto Sans', Whitney, 'Helvetica Neue', sans-serif;
+    font-family: var(--font-discord);
     font-size: 14px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -447,54 +402,52 @@
   }
 
   .discord-titlebar {
-    background: #1e1f22;
-    height: 32px;
+    background: var(--discord-bg);
+    height: 48px;
     display: flex;
     align-items: center;
-    padding: 0 12px;
+    padding: 0 16px;
     gap: 8px;
-    border-bottom: 1px solid #111214;
+    border-bottom: 1px solid rgba(0,0,0,0.24);
     flex-shrink: 0;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
   }
-  .discord-dot {
-    width: 10px; height: 10px; border-radius: 50%;
-  }
-  .d-red   { background: #e04444; }
-  .d-yel   { background: #e8a835; }
-  .d-grn   { background: #44b044; }
+  .discord-dot { display: none; }
+  .d-red, .d-yel, .d-grn { display: none; }
   .discord-channel-name {
-    margin-left: 8px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: #81848f;
-    letter-spacing: 0.04em;
+    font-family: var(--font-discord);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-hi);
+    letter-spacing: 0;
   }
-  .discord-channel-name::before { content: '# '; color: #4e5058; }
+  .discord-channel-name::before { content: '# '; color: var(--muted2); font-weight: 900; }
 
   .discord-body {
     flex: 1;
-    padding: 16px;
+    padding: 16px 16px 8px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 4px;
+    background: var(--discord-bg);
   }
 
   .discord-msg-row {
     display: flex;
-    gap: 14px;
-    padding: 4px 0;
+    gap: 16px;
+    padding: 2px 8px;
     border-radius: 4px;
     transition: background 0.1s;
   }
   .discord-msg-row:hover { background: rgba(0,0,0,0.06); }
 
   .discord-avatar {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     flex-shrink: 0;
-    background: #5865f2;
+    background: var(--accent);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -518,10 +471,11 @@
     font-weight: 500;
     color: #ffffff;
     font-size: 15px;
+    line-height: 1.375;
   }
   .discord-timestamp {
-    font-size: 11px;
-    color: #4e5058;
+    font-size: 12px;
+    color: #949ba4;
     font-weight: 400;
   }
 
@@ -619,25 +573,24 @@
     justify-content: center;
     gap: 12px;
     color: var(--muted2);
-    font-size: 12px;
-    letter-spacing: 0.06em;
+    font-size: 14px;
     text-align: center;
+    line-height: 1.5;
   }
-  .preview-empty i { font-size: 32px; color: var(--border); text-shadow: none; }
+  .preview-empty i { font-size: 40px; color: var(--muted2); }
   .preview-empty.hidden { display: none; }
 
   /* ======= FOOTER ======= */
   .page-footer {
     text-align: center;
-    font-size: 10px;
+    font-size: 12px;
     color: var(--muted2);
-    letter-spacing: 0.1em;
-    margin-top: 28px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
+    margin-top: 24px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border2);
   }
-  .page-footer::before { content: '/* '; }
-  .page-footer::after  { content: ' */'; }
+  .page-footer::before { display: none; }
+  .page-footer::after  { display: none; }
 
   /* ======= ANIMATIONS ======= */
   @keyframes fade-in {
@@ -660,8 +613,8 @@
 
     /* topbar: keep logo + title, hide secondary stuff */
     .topbar {
-      padding: 0 16px;
-      gap: 12px;
+      padding: 0 12px;
+      gap: 8px;
       flex-wrap: wrap;
       height: auto;
       min-height: var(--topbar-h);
@@ -684,14 +637,14 @@
 
     .panel-left {
       border-right: none;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--border2);
       overflow: visible;
-      padding: 20px 14px 28px;
+      padding: 16px 12px 24px;
     }
 
     .panel-right {
       overflow: visible;
-      padding: 20px 14px 40px;
+      padding: 16px 12px 40px;
     }
 
     /* discord preview: no fixed height, grows with content */
@@ -703,7 +656,7 @@
     /* make fields a bit taller for thumbs */
     .field-inner input,
     .field-inner textarea {
-      font-size: 15px;
+      font-size: 16px;
       padding: 6px 12px 10px;
     }
 
@@ -711,14 +664,14 @@
 
     /* send button: easier to tap */
     .btn-send {
-      padding: 16px 0;
-      font-size: 14px;
-      margin-top: 16px;
+      padding: 14px 0;
+      font-size: 15px;
+      margin-top: 14px;
     }
 
     /* two-col inside field-group stays side-by-side on phone (it's narrow enough) */
     .two-col { grid-template-columns: 1fr; }
-    .two-col .field-row:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+    .two-col .field-row:first-child { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.04); }
 
     /* embed preview thumbnail smaller on mobile */
     .discord-embed-thumbnail { width: 56px; height: 56px; }
@@ -729,9 +682,8 @@
   /* ======= VERY SMALL (<=400px) ======= */
   @media (max-width: 400px) {
     .topbar-title { font-size: 14px; }
-    .topbar-badge { font-size: 9px; padding: 3px 8px; }
-    .hero-title { font-size: 20px; }
-    .panel-left, .panel-right { padding: 14px 10px 24px; }
+    .topbar-badge { font-size: 13px; }
+    .panel-left, .panel-right { padding: 12px 8px 20px; }
   }
   </style>
 </head>
@@ -740,20 +692,14 @@
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="topbar-logo">
-    <svg width="20" height="20" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M7 6 C7 6 4 6 4 10 C4 14 7 14 7 14 L18 14" stroke="#a78bfa" stroke-width="2" stroke-linecap="square" fill="none"/>
-      <line x1="18" y1="9" x2="18" y2="20" stroke="#e8e8e8" stroke-width="2" stroke-linecap="square"/>
-      <polyline points="14,16 18,20 22,16" stroke="#e8e8e8" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
-      <rect x="16" y="21" width="4" height="1.5" fill="#a78bfa"/>
-    </svg>
+    <i class="ti ti-brand-discord" style="font-size:22px;color:#5865f2"></i>
   </div>
-  <div class="topbar-title">Webhook</div>
+  <div class="topbar-title">webhook</div>
   <div class="topbar-sep"></div>
-  <div class="topbar-eyebrow">./webhook --init</div>
-  <div class="topbar-sub">send Discord messages via webhook</div>
+  <div class="topbar-sub">Send Discord messages via webhook</div>
   <div class="topbar-badge">
     <i class="ti ti-brand-discord" aria-hidden="true"></i>
-    by Specyfikation
+    by specyxoxo
   </div>
 </div>
 
@@ -887,7 +833,7 @@
 
     <div class="status" id="status-box"></div>
 
-    <div class="page-footer">Webhook v4 - by Specyfikation - Discord webhook client</div>
+    <div class="page-footer">Webhook v4 - by specyxoxo - Discord webhook client</div>
   </div>
 
   <!-- RIGHT: PREVIEW -->
@@ -931,225 +877,272 @@
           </div>
         </div>
       </div>
+      <!-- Discord-style fake input bar -->
+      <div style="padding:0 16px 16px;flex-shrink:0;">
+        <div style="background:#383a40;border-radius:8px;padding:11px 16px;display:flex;align-items:center;gap:12px;color:#949ba4;font-size:15px;">
+          <i class="ti ti-circle-plus" style="font-size:20px;flex-shrink:0"></i>
+          <span style="flex:1;opacity:0.55">Message #general</span>
+          <i class="ti ti-mood-smile" style="font-size:20px;flex-shrink:0"></i>
+          <i class="ti ti-gift" style="font-size:20px;flex-shrink:0"></i>
+        </div>
+      </div>
     </div>
   </div>
 
 </div>
 
 <script>
-  var embedOn = false
+  let embedEnabled = false;
 
+  // Toggle the embed section on/off
   function toggleEmbed() {
-    embedOn = !embedOn
-    document.getElementById('toggle-sw').className = 'toggle-switch' + (embedOn ? ' on' : '')
-    document.getElementById('embed-body').className = 'embed-body' + (embedOn ? ' visible' : '')
-    document.getElementById('embed-toggle').className = 'embed-toggle-row' + (embedOn ? ' active' : '')
-    updatePreview()
+    embedEnabled = !embedEnabled;
+
+    document.getElementById('toggle-sw').classList.toggle('on', embedEnabled);
+    document.getElementById('embed-body').classList.toggle('visible', embedEnabled);
+    document.getElementById('embed-toggle').classList.toggle('active', embedEnabled);
+
+    updatePreview();
   }
 
-  function syncColor(v) {
-    document.getElementById('em-color').value = v
-    document.getElementById('em-color-hex').value = v
-    // also update the little accent bar + preview border live
-    document.getElementById('embed-accent').style.background = v
-    document.getElementById('embed-accent').style.boxShadow = '0 0 8px ' + v + '88'
-    document.getElementById('prev-embed').style.borderLeftColor = v
-    updatePreview()
+  // Keep the color picker and hex input in sync
+  function syncColor(newColor) {
+    document.getElementById('em-color').value = newColor;
+    document.getElementById('em-color-hex').value = newColor;
+    document.getElementById('embed-accent').style.background = newColor;
+    document.getElementById('prev-embed').style.borderLeftColor = newColor;
+    updatePreview();
   }
 
+  // Update the character counter below the message textarea
   function updateCounter() {
-    var len = document.getElementById('msg-content').value.length
-    var el = document.getElementById('char-counter')
-    el.textContent = len + ' / 2000'
-    el.className = len > 1800 ? 'char-row warn' : 'char-row'
+    const length = document.getElementById('msg-content').value.length;
+    const counter = document.getElementById('char-counter');
+    counter.textContent = `${length} / 2000`;
+    counter.classList.toggle('warn', length > 1800);
   }
 
-  // discord-style timestamp
-  function now() {
-    var d = new Date()
-    var h = d.getHours(), m = d.getMinutes()
-    var ampm = h < 12 ? 'AM' : 'PM'
-    h = h % 12 || 12
-    return 'Today at ' + h + ':' + (m < 10 ? '0'+m : m) + ' ' + ampm
+  // Returns a Discord-style timestamp like "Today at 3:42 PM"
+  function getTimestamp() {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const ampm = hours < 12 ? 'AM' : 'PM';
+    hours = hours % 12 || 12;
+    return `Today at ${hours}:${minutes} ${ampm}`;
   }
 
+  // Render the live Discord message preview on the right panel
   function updatePreview() {
-    var content   = document.getElementById('msg-content').value
-    var botName   = document.getElementById('bot-name').value.trim() || 'Webhook'
-    var avatarUrl = document.getElementById('avatar-url').value.trim()
+    const content = document.getElementById('msg-content').value;
+    const botName = document.getElementById('bot-name').value.trim() || 'Webhook';
+    const avatarUrl = document.getElementById('avatar-url').value.trim();
 
-    var emTitle = '', emDesc = '', emUrl = '', emFooter = '', emImage = '', emThumbnail = ''
-    var emColor = document.getElementById('em-color').value
-    if (embedOn) {
-      emTitle     = document.getElementById('em-title').value.trim()
-      emDesc      = document.getElementById('em-desc').value.trim()
-      emUrl       = document.getElementById('em-url').value.trim()
-      emFooter    = document.getElementById('em-footer').value.trim()
-      emImage     = document.getElementById('em-image').value.trim()
-      emThumbnail = document.getElementById('em-thumbnail').value.trim()
+    // Collect embed fields if the embed is enabled
+    let embedTitle = '', embedDesc = '', embedUrl = '', embedFooter = '', embedImage = '', embedThumbnail = '';
+    const embedColor = document.getElementById('em-color').value;
+
+    if (embedEnabled) {
+      embedTitle     = document.getElementById('em-title').value.trim();
+      embedDesc      = document.getElementById('em-desc').value.trim();
+      embedUrl       = document.getElementById('em-url').value.trim();
+      embedFooter    = document.getElementById('em-footer').value.trim();
+      embedImage     = document.getElementById('em-image').value.trim();
+      embedThumbnail = document.getElementById('em-thumbnail').value.trim();
     }
 
-    var hasContent = content.trim() || (embedOn && (emTitle || emDesc || emImage || emThumbnail))
-    document.getElementById('preview-empty').className = hasContent ? 'preview-empty hidden' : 'preview-empty'
-    document.getElementById('discord-window').style.display = hasContent ? 'flex' : 'none'
-    if (!hasContent) return
+    const hasMessage = content.trim();
+    const hasEmbed   = embedEnabled && (embedTitle || embedDesc || embedImage || embedThumbnail);
+    const hasAnything = hasMessage || hasEmbed;
 
-    document.getElementById('prev-author').textContent = botName
-    document.getElementById('prev-ts').textContent = now()
+    // Show/hide empty state vs preview
+    document.getElementById('preview-empty').classList.toggle('hidden', hasAnything);
+    document.getElementById('discord-window').style.display = hasAnything ? 'flex' : 'none';
+    if (!hasAnything) return;
 
-    // avatar - show image if valid url, else fallback to first letter
-    var av = document.getElementById('prev-avatar')
+    // Bot name and timestamp
+    document.getElementById('prev-author').textContent = botName;
+    document.getElementById('prev-ts').textContent = getTimestamp();
+
+    // Avatar: use image if provided, otherwise show the first letter of the bot name
+    const avatarEl = document.getElementById('prev-avatar');
+    const fallbackLetter = botName.charAt(0).toUpperCase();
     if (avatarUrl && avatarUrl.startsWith('http')) {
-      var letter = botName.charAt(0).toUpperCase()
-      av.innerHTML = '<img src="' + avatarUrl + '" onerror="this.parentElement.textContent=\'' + letter + '\'" />'
+      avatarEl.innerHTML = `<img src="${avatarUrl}" onerror="this.parentElement.textContent='${fallbackLetter}'" />`;
     } else {
-      av.textContent = botName.charAt(0).toUpperCase()
+      avatarEl.textContent = fallbackLetter;
     }
 
-    // basic markdown: **bold** *italic* `code`
-    var txt = content
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    // Render basic markdown: **bold**, *italic*, `code`
+    const escaped = content
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+    const rendered = escaped
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/`(.+?)`/g, '<code style="background:#111214;padding:1px 5px;border-radius:3px;font-family:monospace;font-size:13px">$1</code>')
-    document.getElementById('prev-text').innerHTML = txt
+      .replace(/`(.+?)`/g, '<code style="background:#111214;padding:1px 5px;border-radius:3px;font-family:monospace;font-size:13px">$1</code>');
+    document.getElementById('prev-text').innerHTML = rendered;
 
-    var embedEl = document.getElementById('prev-embed')
-    if (embedOn && (emTitle || emDesc || emImage || emThumbnail)) {
-      embedEl.className = 'discord-embed visible'
-      embedEl.style.borderLeftColor = emColor
+    // Render the embed card if there's content
+    const embedEl = document.getElementById('prev-embed');
+    if (hasEmbed) {
+      embedEl.classList.add('visible');
+      embedEl.style.borderLeftColor = embedColor;
 
-      var titleEl = document.getElementById('prev-em-title')
-      titleEl.textContent = emTitle
-      titleEl.className = 'discord-embed-title' + (emTitle ? ' has-content' : '')
-      if (emTitle && emUrl && emUrl.startsWith('http')) {
-        titleEl.style.color = '#00aff4'
-        titleEl.style.textDecoration = 'underline'
-        titleEl.style.cursor = 'pointer'
-        titleEl.onclick = function() { window.open(emUrl, '_blank') }
+      // Title (clickable if a URL is provided)
+      const titleEl = document.getElementById('prev-em-title');
+      titleEl.textContent = embedTitle;
+      titleEl.classList.toggle('has-content', !!embedTitle);
+      if (embedTitle && embedUrl.startsWith('http')) {
+        titleEl.style.color = '#00aff4';
+        titleEl.style.textDecoration = 'underline';
+        titleEl.style.cursor = 'pointer';
+        titleEl.onclick = () => window.open(embedUrl, '_blank');
       } else {
-        titleEl.style.color = '#dbdee1'
-        titleEl.style.textDecoration = 'none'
-        titleEl.style.cursor = 'default'
-        titleEl.onclick = null
+        titleEl.style.color = '#dbdee1';
+        titleEl.style.textDecoration = 'none';
+        titleEl.style.cursor = 'default';
+        titleEl.onclick = null;
       }
 
-      document.getElementById('prev-em-desc').textContent = emDesc
-      document.getElementById('prev-em-desc').className = 'discord-embed-desc' + (emDesc ? ' has-content' : '')
+      // Description
+      const descEl = document.getElementById('prev-em-desc');
+      descEl.textContent = embedDesc;
+      descEl.classList.toggle('has-content', !!embedDesc);
 
-      document.getElementById('prev-em-footer').textContent = emFooter
-      document.getElementById('prev-em-footer').className = 'discord-embed-footer' + (emFooter ? ' has-content' : '')
+      // Footer
+      const footerEl = document.getElementById('prev-em-footer');
+      footerEl.textContent = embedFooter;
+      footerEl.classList.toggle('has-content', !!embedFooter);
 
-      // large image at the bottom of the embed
-      var imgEl = document.getElementById('prev-em-image')
-      if (emImage && emImage.startsWith('http')) {
-        imgEl.src = emImage
-        imgEl.className = 'discord-embed-image visible'
-        imgEl.onerror = function() { this.className = 'discord-embed-image' }
+      // Large image (shown below description)
+      const imageEl = document.getElementById('prev-em-image');
+      if (embedImage.startsWith('http')) {
+        imageEl.src = embedImage;
+        imageEl.classList.add('visible');
+        imageEl.onerror = () => imageEl.classList.remove('visible');
       } else {
-        imgEl.src = ''
-        imgEl.className = 'discord-embed-image'
+        imageEl.src = '';
+        imageEl.classList.remove('visible');
       }
 
-      // small thumbnail top-right
-      var thumbEl = document.getElementById('prev-em-thumbnail')
-      if (emThumbnail && emThumbnail.startsWith('http')) {
-        thumbEl.src = emThumbnail
-        thumbEl.className = 'discord-embed-thumbnail visible'
-        thumbEl.onerror = function() { this.className = 'discord-embed-thumbnail' }
+      // Small thumbnail (shown top-right)
+      const thumbEl = document.getElementById('prev-em-thumbnail');
+      if (embedThumbnail.startsWith('http')) {
+        thumbEl.src = embedThumbnail;
+        thumbEl.classList.add('visible');
+        thumbEl.onerror = () => thumbEl.classList.remove('visible');
       } else {
-        thumbEl.src = ''
-        thumbEl.className = 'discord-embed-thumbnail'
+        thumbEl.src = '';
+        thumbEl.classList.remove('visible');
       }
     } else {
-      embedEl.className = 'discord-embed'
+      embedEl.classList.remove('visible');
     }
   }
 
-  function hexToInt(h) {
-    return parseInt(h.replace('#', ''), 16)
+  // Discord embed colors are integers, not hex strings
+  function hexColorToInt(hex) {
+    return parseInt(hex.replace('#', ''), 16);
   }
 
+  // Send the webhook request to Discord
   async function sendWebhook() {
-    var url       = document.getElementById('wh-url').value.trim()
-    var content   = document.getElementById('msg-content').value.trim()
-    var botName   = document.getElementById('bot-name').value.trim()
-    var avatarUrl = document.getElementById('avatar-url').value.trim()
-    var btn       = document.getElementById('send-btn')
+    const webhookUrl = document.getElementById('wh-url').value.trim();
+    const content    = document.getElementById('msg-content').value.trim();
+    const botName    = document.getElementById('bot-name').value.trim();
+    const avatarUrl  = document.getElementById('avatar-url').value.trim();
+    const sendButton = document.getElementById('send-btn');
 
-    if (!url) { showStatus('error', 'please enter the webhook URL.'); return }
-    if (!content && !embedOn) { showStatus('error', 'write a message or enable an embed.'); return }
-    if (content.length > 2000) { showStatus('error', 'message exceeds 2000 characters.'); return }
+    // Basic validation
+    if (!webhookUrl) {
+      showStatus('error', 'Please enter the webhook URL.');
+      return;
+    }
+    if (!content && !embedEnabled) {
+      showStatus('error', 'Write a message or enable an embed.');
+      return;
+    }
+    if (content.length > 2000) {
+      showStatus('error', 'Message exceeds 2000 characters.');
+      return;
+    }
 
-    var payload = {}
-    if (content) payload.content = content
-    if (botName.length >= 2) payload.username = botName
-    if (avatarUrl.startsWith('http')) payload.avatar_url = avatarUrl
+    // Build the payload
+    const payload = {};
+    if (content) payload.content = content;
+    if (botName.length >= 2) payload.username = botName;
+    if (avatarUrl.startsWith('http')) payload.avatar_url = avatarUrl;
 
-    if (embedOn) {
-      var embed    = {}
-      var title    = document.getElementById('em-title').value.trim()
-      var desc     = document.getElementById('em-desc').value.trim()
-      var emUrl    = document.getElementById('em-url').value.trim()
-      var color    = document.getElementById('em-color').value
-      var footer   = document.getElementById('em-footer').value.trim()
-      var imgUrl   = document.getElementById('em-image').value.trim()
-      var thumbUrl = document.getElementById('em-thumbnail').value.trim()
+    if (embedEnabled) {
+      const title     = document.getElementById('em-title').value.trim();
+      const desc      = document.getElementById('em-desc').value.trim();
+      const embedUrl  = document.getElementById('em-url').value.trim();
+      const color     = document.getElementById('em-color').value;
+      const footer    = document.getElementById('em-footer').value.trim();
+      const imageUrl  = document.getElementById('em-image').value.trim();
+      const thumbUrl  = document.getElementById('em-thumbnail').value.trim();
 
-      if (!title && !desc && !imgUrl && !thumbUrl) {
-        showStatus('error', 'the embed needs at least a title, description, or image.')
-        return
+      if (!title && !desc && !imageUrl && !thumbUrl) {
+        showStatus('error', 'The embed needs at least a title, description, or image.');
+        return;
       }
 
-      if (title)                        embed.title       = title
-      if (desc)                         embed.description = desc
-      if (emUrl.startsWith('http'))     embed.url         = emUrl
-      if (footer)                       embed.footer      = { text: footer }
-      if (imgUrl.startsWith('http'))    embed.image       = { url: imgUrl }
-      if (thumbUrl.startsWith('http'))  embed.thumbnail   = { url: thumbUrl }
-      embed.color     = hexToInt(color)
-      embed.timestamp = new Date().toISOString()
-      payload.embeds  = [embed]
+      const embed = {};
+      if (title)                       embed.title       = title;
+      if (desc)                        embed.description = desc;
+      if (embedUrl.startsWith('http')) embed.url         = embedUrl;
+      if (footer)                      embed.footer      = { text: footer };
+      if (imageUrl.startsWith('http')) embed.image       = { url: imageUrl };
+      if (thumbUrl.startsWith('http')) embed.thumbnail   = { url: thumbUrl };
+      embed.color     = hexColorToInt(color);
+      embed.timestamp = new Date().toISOString();
+      payload.embeds  = [embed];
     }
 
-    btn.disabled = true
-    btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin .8s linear infinite"></i> sending...'
+    // Disable the button while sending
+    sendButton.disabled = true;
+    sendButton.innerHTML = '<i class="ti ti-loader-2" style="animation:spin .8s linear infinite"></i> Sending...';
 
     try {
-      var res = await fetch(url, {
+      const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
+        body: JSON.stringify(payload),
+      });
 
-      if (res.ok || res.status === 204) {
-        showStatus('success', 'message sent to Discord!')
-        document.getElementById('msg-content').value = ''
-        updateCounter()
-        updatePreview()
+      if (response.ok || response.status === 204) {
+        showStatus('success', 'Message sent to Discord!');
+        document.getElementById('msg-content').value = '';
+        updateCounter();
+        updatePreview();
       } else {
-        var detail = 'unknown error'
-        try { var err = await res.json(); detail = err.message || JSON.stringify(err) } catch(e) {}
-        showStatus('error', 'error ' + res.status + ': ' + detail)
+        let errorDetail = 'Unknown error';
+        try {
+          const errorBody = await response.json();
+          errorDetail = errorBody.message || JSON.stringify(errorBody);
+        } catch (_) {}
+        showStatus('error', `Error ${response.status}: ${errorDetail}`);
       }
-    } catch(e) {
-      showStatus('error', 'request blocked - check the webhook URL.')
+    } catch (err) {
+      showStatus('error', 'Request failed — check the webhook URL or your connection.');
     }
 
-    btn.disabled = false
-    btn.innerHTML = '<i class="ti ti-send"></i> send message'
+    sendButton.disabled = false;
+    sendButton.innerHTML = '<i class="ti ti-send"></i> Send message';
   }
 
-  function showStatus(type, msg) {
-    var s = document.getElementById('status-box')
-    s.className = 'status ' + type
-    s.textContent = msg
+  function showStatus(type, message) {
+    const statusBox = document.getElementById('status-box');
+    statusBox.className = `status ${type}`;
+    statusBox.textContent = message;
   }
 
-  // spin keyframe for the loading button
-  var s = document.createElement('style')
-  s.textContent = '@keyframes spin { to { transform: rotate(360deg) } }'
-  document.head.appendChild(s)
+  // Inject the spin animation for the loading button state
+  const spinStyle = document.createElement('style');
+  spinStyle.textContent = '@keyframes spin { to { transform: rotate(360deg) } }';
+  document.head.appendChild(spinStyle);
 </script>
 </body>
 </html>
